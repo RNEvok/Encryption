@@ -1,0 +1,18 @@
+@startuml Объектная модель
+  !theme plain
+  skinparam BackgroundColor #B9D2F6
+  skinparam ObjectBorderColor #948BFF
+  skinparam ObjectBackgroundColor #FFFFFF
+  skinparam Handwritten false
+
+  object Encryption
+  object AsymmetricEncryption
+  object Message
+
+  Message --> Encryption : "Encode"
+  Message --> Encryption : "Decode"
+
+  Encryption --> AsymmetricEncryption : "Encode\nmessage"
+  Encryption --> AsymmetricEncryption : "Decode\nmessage"
+  
+@enduml

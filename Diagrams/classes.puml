@@ -1,0 +1,84 @@
+@startuml Диаграмма классов
+  !theme plain
+  skinparam BackgroundColor #d2e3fc
+  skinparam ClassBorderColor #4940ad
+  skinparam ClassBackgroundColor #efedff
+  skinparam Handwritten false
+
+  class Message {
+    +string text
+    +bool isSecure
+    +void logMessage()
+  }
+
+  class Encryption {
+    +Message encode(Message m)
+    +Message decode(Message m)
+  }
+
+  class AsymmetricEncryption
+  class PublicKey
+  class PrivateKey
+  class KeyPair {
+    -PublicKey publicKey
+    -PrivateKey privateKey
+    +PublicKey getPublicKey()
+    +PrivateKey getPrivateKey()
+  }
+
+  class KeysGenerator {
+    #KeyPair keys
+  }
+
+  class Encoder {
+    #Message encode(Message m, PublicKey key)
+  }
+
+  class Decoder {
+    #Message decode(Message m, PrivateKey key)
+  }
+
+  class BigInt {
+    -CharVector accumulator
+    -bool isNegative
+    +void logNumber()
+    +size_t length()
+    +string getAccumator()
+    +string getAccumatorWithSign()
+    +bool getIsNegative()
+    +BigInt& operator = (const BigInt& other)
+    +bool operator == (BigInt a, BigInt b)
+    +bool operator < (BigInt& left, BigInt& right)
+    +bool operator > (BigInt& left, BigInt& right)
+    +bool operator <= (BigInt& left, BigInt& right)
+    +bool operator >= (BigInt& left, BigInt& right)
+    +BigInt operator + (BigInt a, BigInt b)
+    +BigInt& operator ++ (int)
+    +BigInt& operator += (BigInt& other)
+    +BigInt operator - (BigInt a, BigInt b)
+    +BigInt& operator -- (int)
+    +BigInt& operator -= (const BigInt& other)
+    +BigInt operator * (BigInt a, BigInt b)
+    +BigInt& operator *= (const BigInt& other)
+    +BigInt operator / (BigInt aSigned, BigInt bSigned)
+    +BigInt& operator /= (const BigInt& other)
+    +BigInt operator % (BigInt a, BigInt b)
+    +BigInt& operator %= (const BigInt& other)
+  }
+
+  KeyPair o-- PrivateKey
+  KeyPair o-- PublicKey
+
+  Encryption <|-- AsymmetricEncryption
+  Encryption <-- Message
+
+  AsymmetricEncryption *-- KeysGenerator
+  AsymmetricEncryption *-- Encoder
+  AsymmetricEncryption *-- Decoder
+
+  KeysGenerator *-- KeyPair
+  KeysGenerator <-- BigInt
+  Encoder <-- BigInt
+  Decoder <-- BigInt
+  
+@enduml
