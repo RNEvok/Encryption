@@ -134,7 +134,7 @@ class BigInt {
   };
 
   // Меньше
-  friend bool operator < (BigInt& left, BigInt& right) {
+  friend bool operator < (BigInt left, BigInt right) {
     if (equal(left.getAccumator(), ZERO) && equal(right.getAccumator(), ZERO))
       return false;
 
@@ -151,17 +151,17 @@ class BigInt {
   };
 
   // Больше
-  friend bool operator > (BigInt& left, BigInt& right) {
+  friend bool operator > (BigInt left, BigInt right) {
     return (right < left);
   };
 
   // Меньше или равно
-  friend bool operator <= (BigInt& left, BigInt& right) {
+  friend bool operator <= (BigInt left, BigInt right) {
     return !(left > right);
   };
 
   // Больше или равно
-  friend bool operator >= (BigInt& left, BigInt& right) {
+  friend bool operator >= (BigInt left, BigInt right) {
     return !(left < right);
   };
 
@@ -326,3 +326,23 @@ class BigInt {
     return (*this = *this % other);
   };
 };
+
+const BigInt B_ZERO(0);
+const BigInt B_ONE(1);
+const BigInt B_TWO(2);
+const BigInt B_THREE(3);
+
+// Вектор больших чисел
+typedef vector<BigInt> BigIntVector;
+
+// Возвращает случайный BigInt длины len
+BigInt randomBigInt(unsigned len);
+
+// Возвращает вектор больших чисел; a - вектор целых
+BigIntVector intVectorToBigIntVector(IntVector a);
+
+// Возвращает true, если num - нечетное, и false - в противном случае
+bool isOdd(BigInt num);
+
+// Возвращает true, если num - четное, и false - в противном случае
+bool isEven(BigInt num);

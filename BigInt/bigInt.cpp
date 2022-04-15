@@ -201,3 +201,39 @@ string multiplicationInner(CharVector a, CharVector b) {
 
   return charVectorToString(&stackChar);
 };
+
+BigInt randomBigInt(unsigned len) {
+  string accumulator = "";
+
+  int firstDigit = getRandomInt(1, 9);
+  accumulator += to_string(firstDigit);
+
+  for (unsigned i = 0; i < len - 1; i++) {
+    int digit = getRandomInt(0, 9);
+    accumulator += to_string(digit);
+  }
+
+  return BigInt(accumulator);
+};
+
+BigIntVector intVectorToBigIntVector(IntVector a) {
+  BigIntVector b;
+
+  for (auto x : a)
+    b.push_back(BigInt(x));
+
+  return b;
+};
+
+bool isOdd(BigInt num) {
+  string s = num.getAccumator();
+  
+  char lastDigit = s.back();
+  int lastDigitInt = charToInt(lastDigit);
+
+  return (lastDigitInt % 2);
+};
+
+bool isEven(BigInt num) {
+  return !isOdd(num);
+};

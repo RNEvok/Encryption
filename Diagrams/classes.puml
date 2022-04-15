@@ -11,12 +11,12 @@
     +void logMessage()
   }
 
-  class Encryption {
-    +Message encode(Message m)
-    +Message decode(Message m)
-  }
+  interface Encryption
 
-  class AsymmetricEncryption
+  class AsymmetricEncryption {
+    +Message encode(Message m, PublicKey key)
+    +Message decode(Message m, PrivateKey key)
+  }
   class PublicKey
   class PrivateKey
   class KeyPair {
@@ -30,12 +30,12 @@
     #KeyPair keys
   }
 
-  class Encoder {
-    #Message encode(Message m, PublicKey key)
+  interface Encoder {
+    #Message encode(Message m)
   }
 
-  class Decoder {
-    #Message decode(Message m, PrivateKey key)
+  interface Decoder {
+    #Message decode(Message m)
   }
 
   class BigInt {
@@ -69,16 +69,20 @@
   KeyPair o-- PrivateKey
   KeyPair o-- PublicKey
 
-  Encryption <|-- AsymmetricEncryption
+  Encoder <|-- Encryption
+  Decoder <|-- Encryption
+
+  Encryption <|.. AsymmetricEncryption
   Encryption <-- Message
 
   AsymmetricEncryption *-- KeysGenerator
-  AsymmetricEncryption *-- Encoder
-  AsymmetricEncryption *-- Decoder
+  AsymmetricEncryption <-- BigInt
+  ' AsymmetricEncryption *-- Encoder
+  ' AsymmetricEncryption *-- Decoder
 
   KeysGenerator *-- KeyPair
   KeysGenerator <-- BigInt
-  Encoder <-- BigInt
-  Decoder <-- BigInt
+  ' Encoder <-- BigInt
+  ' Decoder <-- BigInt
   
 @enduml
