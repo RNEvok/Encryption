@@ -78,6 +78,9 @@
     "thread": "cpp",
     "numeric": "cpp",
     "random": "cpp",
-    "list": "cpp"
+    "list": "cpp",
+    "compare": "cpp",
+    "concepts": "cpp",
+    "variant": "cpp"
   }
 }

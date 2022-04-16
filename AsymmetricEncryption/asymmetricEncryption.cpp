@@ -17,8 +17,7 @@ BigInt getLowLevelPrime(unsigned len) {
   }
 };
 
-// modular exponentiation
-BigInt modulo(BigInt base, BigInt exponent, BigInt mod) {
+BigInt modularExponentiation(BigInt base, BigInt exponent, BigInt mod) {
   BigInt x = B_ONE;
   BigInt y = base;
 
@@ -47,7 +46,7 @@ bool isMillerRabinTestOk(BigInt candidate) {
   for (int i = 0; i < MILLER_RABIN_TEST_ITERATIONS; i++) {
     BigInt a = BigInt(rand()) % canditateMinusOne + B_ONE;
     BigInt temp = s;
-    BigInt mod = modulo(a, temp, candidate);
+    BigInt mod = modularExponentiation(a, temp, candidate);
 
     while (temp != canditateMinusOne && mod != B_ONE && mod != canditateMinusOne) {
       mod = mod * mod % candidate;
@@ -105,3 +104,13 @@ BigInt steinGCD(BigInt a, BigInt b) {
 
   return gcd((b - a) / B_TWO, a);
 }; 
+
+BezoutResult bezout(BigInt a, BigInt b) {
+  if (b == B_ZERO)
+    return {B_ONE, B_ZERO, a};
+
+  BezoutResult r = bezout(b, a % b);
+  std::swap(r.x, r.y);
+
+  return {r.x, r.y - a / b * r.x, r.gcd};
+};

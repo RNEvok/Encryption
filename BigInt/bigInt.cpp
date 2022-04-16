@@ -237,3 +237,66 @@ bool isOdd(BigInt num) {
 bool isEven(BigInt num) {
   return !isOdd(num);
 };
+
+int byteToInt(byte b) {
+  return to_integer<int>(b);
+};
+
+ByteVector stringToByteVector(string text) {
+  ByteVector bytes;
+
+  for (size_t i = 0; i < text.length(); i++)
+    bytes.push_back(byte(text[i]));
+
+  return bytes;
+};
+
+BigInt byteVectorToBigInt(ByteVector bytes) {
+  BigInt q(1);
+  BigInt result(0);
+
+  for (auto byte : bytes)
+    for (int i = 0; i < 8; i++) {
+      BigInt p((byteToInt(byte) >> i) & 1);
+
+      result += p * q;
+      q *= B_TWO;
+    }
+
+  return result;
+};
+
+ByteVector bigIntToByteVector(BigInt a) {
+  ByteVector bytes;
+
+  int i = 7;
+  byte b{0};
+  byte maskZero{0};
+  byte maskOne{1};
+  while (a != B_ZERO) {
+    b |= (isEven(a)? maskZero: maskOne) << 7 - i--;
+    a /= B_TWO;
+
+    if (i == -1) {
+      bytes.push_back(b);
+      i = 7;
+      b &= maskZero;
+    }
+  }
+  bytes.push_back(b);
+
+  return bytes;
+};
+
+string byteVectorToString(ByteVector bytes) {
+  string s = "";
+
+  for (auto byte : bytes)
+    s += (char)(byte);
+
+  return s;
+};
+
+string bigIntToString(BigInt a) {
+  return byteVectorToString(bigIntToByteVector(a));
+};

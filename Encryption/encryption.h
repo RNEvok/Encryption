@@ -26,6 +26,14 @@ class Message {
     void logMessage() {
       cout << this->text << endl;
     };
+
+    ByteVector convertToBytes() {
+      return stringToByteVector(text);
+    };
+
+    BigInt convertToBigInt() {
+      return byteVectorToBigInt(this->convertToBytes());
+    };
 };
 
 class Encoder {

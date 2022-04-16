@@ -5,6 +5,7 @@
   "scripts": {
     "c": "g++ main.cpp AsymmetricEncryption/asymmetricEncryption.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -std=c++20 -g -o a.out && ./a.out",
     "file": "g++ fileWork.cpp list.cpp student.cpp myMath.cpp -std=c++20 -g -o a.out",
-    "test": "g++ tests.cpp AsymmetricEncryption/asymmetricEncryption.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -std=c++20 -g -o a.out && ./a.out"
+    "test": "g++ tests.cpp AsymmetricEncryption/asymmetricEncryption.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -std=c++20 -g -o a.out && ./a.out",
+    "unitBigInt": "g++ BigInt/tests.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -std=c++20 -g -o a.out && ./a.out"
   }
 }

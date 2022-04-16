@@ -17,6 +17,8 @@ using namespace std;
 typedef vector<char> CharVector;
 // Вектор целых
 typedef vector<int> IntVector;
+// Вектор байтов
+typedef vector<byte> ByteVector;
 
 // Приведение вектора символов к строке
 string charVectorToString(CharVector* a);
@@ -206,7 +208,7 @@ class BigInt {
   };
 
   // Присваивающее сложение
-  BigInt& operator += (BigInt& other) {
+  BigInt& operator += (const BigInt& other) {
     return (*this = *this + other);
   };
 
@@ -346,3 +348,21 @@ bool isOdd(BigInt num);
 
 // Возвращает true, если num - четное, и false - в противном случае
 bool isEven(BigInt num);
+
+// Приведение байта к целому
+int byteToInt(byte b);
+
+// Приведение строки к вектору байтов
+ByteVector stringToByteVector(string text);
+
+// Приведение вектора байтов к BigInt
+BigInt byteVectorToBigInt(ByteVector bytes);
+
+// Приведение BigInt к вектору байтов
+ByteVector bigIntToByteVector(BigInt a);
+
+// Приведение вектора байтов к строке
+string byteVectorToString(ByteVector bytes);
+
+// Приведение сообщения записанного в виде числа к строковому виду (читаемый текст)
+string bigIntToString(BigInt a);

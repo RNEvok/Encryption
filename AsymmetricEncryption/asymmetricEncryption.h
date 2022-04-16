@@ -1,7 +1,7 @@
 #include "./../Encryption/encryption.h"
 
 // Необходимая длина простого числа
-#define PRIME_LENGTH 10
+#define PRIME_LENGTH 64
 // Число итераций в тесте Миллера-Рабина
 #define MILLER_RABIN_TEST_ITERATIONS 16
 // Стандартные значения открытой экспоненты (простые из чисел Ферма)
@@ -11,6 +11,14 @@ const BigIntVector defaultPublicExponentValues {
   BigInt(17),
   BigInt(5),
   BigInt(3)
+};
+
+// Type for return value of bezout function
+// x, y and gcd(a, b) for Bezout equation: ax + by = gcd(a, b).
+struct BezoutResult {
+  BigInt x;
+  BigInt y;
+  BigInt gcd;
 };
 
 // Возвращает младшего кандидата на простое число длины len
@@ -23,9 +31,15 @@ bool isMillerRabinTestOk(BigInt millerRabinCandidate);
 // Возвращает старшего кандидата на простое число длины len
 BigInt getPrime(unsigned len);
 
+// Возвращает значение выражения base ** exponent % mod
+BigInt modularExponentiation(BigInt base, BigInt exponent, BigInt mod);
+
 // Возвращает НОД для a и b
 BigInt gcd(BigInt a, BigInt b);
 BigInt steinGCD(BigInt a, BigInt b);
+
+// Расширенный алгоритм Евклида
+BezoutResult bezout(BigInt a, BigInt b);
 
 class PublicKey {
   public:
@@ -93,9 +107,11 @@ class KeysGenerator {
       throw (std::invalid_argument("Cant get public exponent (φ has GCD != 1 with every Prime Ferma number)"));
     };
 
-    // Возвращает число, мультипликативно обратное 
-    BigInt multiplicative inverse element() {
-
+    // Возвращает число, мультипликативно обратное к числу e по модулю φ
+    BigInt multiplicativeInverseElement(BigInt e, BigInt φ) {
+      BezoutResult r = bezout(e, φ);
+      // Проверка на то что r.gcd != 0 не нужна, e и φ взаимно простые по определению
+      return (r.x % φ + φ) % φ;
     };
   protected:
     KeyPair keys;
@@ -106,21 +122,78 @@ class KeysGenerator {
       BigInt n = p * q;
       BigInt φ = (p - B_ONE) * (q - B_ONE);
 
+      cout << "n: ";
+      n.logNumber();
+
+      cout << "φ: ";
       φ.logNumber();
 
       BigInt e = getPublicExponent(φ);
+      cout << "e: ";
       e.logNumber();
+      
+      BigInt d = multiplicativeInverseElement(e, φ);
+      cout << "d: ";
+      d.logNumber();
 
-      PublicKey publicKey(BigInt(1), BigInt(2));
-      PrivateKey privateKey(BigInt(1), BigInt(2));
+      PublicKey publicKey(e, n);
+      PrivateKey privateKey(d, n);
       this->keys = KeyPair(publicKey, privateKey);
+    };
+
+    KeyPair getKeys() {
+      return this->keys;
     };
 };
 
 class AsymmetricEncryption: public Encryption {
+  private:
+    KeyPair keys;
   public:
     AsymmetricEncryption() {
-
+      KeysGenerator g;
+      this->keys = g.getKeys();
     };
-    // Message encode(Message m, )
+
+    Message encode(Message m) {
+      return this->encode(m, keys.getPublicKey());
+    };
+
+    Message encode(Message m, PublicKey key) {
+      if (m.isSecure)
+        throw (std::invalid_argument("Cant encode message. Message is already encoded!"));
+
+      BigInt plainMsg = m.convertToBigInt();
+      cout << "plainMessage: " << endl;
+      plainMsg.logNumber();
+
+      if (plainMsg >= key.n)
+        throw (std::invalid_argument("Cant encode message. Message is too large! Try bigger RSA."));
+
+      BigInt cipherMsg = modularExponentiation(plainMsg, key.e, key.n);
+      string cipherMsgText = bigIntToString(cipherMsg);
+
+      return Message(cipherMsgText, true);
+    };
+
+    Message decode(Message m) {
+      return this->decode(m, keys.getPrivateKey());
+    };
+
+    Message decode(Message m, PrivateKey key) {
+      if (!m.isSecure)
+        throw (std::invalid_argument("Cant decode message. Message is already decoded!"));
+
+      string cipherMsgText = m.text;
+      // BigInt cipherMsg(m.text);
+      cout << "cipherMessage: " << endl;
+      cout << cipherMsgText << endl;
+      
+      BigInt cipherMsg = m.convertToBigInt();
+
+      BigInt plainMsg = modularExponentiation(cipherMsg, key.d, key.n);
+      string plainMsgText = bigIntToString(plainMsg);
+
+      return Message(plainMsgText, false);
+    };
 };
