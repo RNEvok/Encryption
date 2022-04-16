@@ -30,14 +30,12 @@ class Message {
 
 class Encoder {
   protected:
-    virtual Message encode(Message m);
+    virtual Message encode(Message m) = 0;
 };
 
 class Decoder {
   protected:
-    virtual Message decode(Message m);
+    virtual Message decode(Message m) = 0;
 };
 
-class Encryption: public Encoder, public Decoder {
-
-};
+class Encryption: public Encoder, public Decoder {};
