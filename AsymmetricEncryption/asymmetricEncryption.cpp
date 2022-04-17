@@ -6,7 +6,7 @@ BigInt getLowLevelPrime(unsigned len) {
 
     int i = 0;
     for (auto divisor : firstPrimesBigInt) {
-      if (primeCandidate % divisor == BigInt(ZERO) && divisor * divisor <= primeCandidate)
+      if (primeCandidate % divisor == B_ZERO && divisor * divisor <= primeCandidate)
         break;
       
       i++;
@@ -31,6 +31,23 @@ BigInt modularExponentiation(BigInt base, BigInt exponent, BigInt mod) {
   return (x % mod);
 };
 
+// BigInt modularExponentiation(BigInt base, BigInt exponent, BigInt mod) {
+//   BigInt x = B_ONE;
+//   BigInt y = base;
+
+//   #pragma omp for
+//   for ( ; exponent > B_ZERO ;) {
+//     //x.logNumber();
+//     if (isOdd(exponent))
+//       x = (x * y) % mod;
+//     y = (y * y) % mod;
+//     // y.logNumber();
+//     exponent /= B_TWO;
+//   }
+
+//   return (x % mod);
+// };
+
 bool isMillerRabinTestOk(BigInt candidate) {
   if (candidate < B_TWO)
     return false;
@@ -44,17 +61,25 @@ bool isMillerRabinTestOk(BigInt candidate) {
     s /= B_TWO;
 
   for (int i = 0; i < MILLER_RABIN_TEST_ITERATIONS; i++) {
+    clock_t tic1 = clock();
     BigInt a = BigInt(rand()) % canditateMinusOne + B_ONE;
     BigInt temp = s;
+    // cout << "here1" << endl; 
+    clock_t tic2 = clock();
     BigInt mod = modularExponentiation(a, temp, candidate);
+    clock_t tac2 = clock();
+    cout << "gap " << (double)(tac2-tic2) << endl;
+    // cout << "here2" << endl; 
 
     while (temp != canditateMinusOne && mod != B_ONE && mod != canditateMinusOne) {
-      mod = mod * mod % candidate;
+      mod = (mod * mod) % candidate;
       temp *= B_TWO;
     }
 
     if (mod != canditateMinusOne && isEven(temp))
       return false;
+    clock_t tac1 = clock();
+    cout << "Large gap " << (double)(tac1-tic1) << endl;
   }
 
   return true;

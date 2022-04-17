@@ -6,8 +6,6 @@ int main() {
 	try {
 		srand((unsigned)time(NULL));
 
-
-
 		// Message msg("Hello, world!");
 		// // Message msg("C++");
 		// msg.logMessage();
@@ -59,17 +57,18 @@ int main() {
 		// time = toc - tic;
 		// cout << "Время steinGCD: " << time << endl;
 
-		KeysGenerator g;
+		// KeysGenerator g;
 
 		// BigInt a = getPrime(10);
 		// cout << "Кандидат: " << endl;
 		// a.logNumber();
 
-		// BigInt a = getLowLevelPrime(40);
-		// cout << "Кандидат: " << endl;
-		// a.logNumber();
-		// bool ok = isMillerRabinTestOk(BigInt("6867760115452856200139921162967719673559"));
-		// cout << "Тест Миллера-Рабина: " << ok << endl;
+		// cout << "Thread %d: " << omp_get_thread_num( );
+		BigInt a = getLowLevelPrime(20);
+		cout << "Кандидат: " << endl;
+		a.logNumber();
+		bool ok = isMillerRabinTestOk(BigInt("6867760115452856200139921162967719673559"));
+		cout << "Тест Миллера-Рабина: " << ok << endl;
 
 		// bool ok = isMillerRabinTestOk(a);
 		// cout << "Тест Миллера-Рабина: " << ok << endl;
@@ -79,7 +78,7 @@ int main() {
 		// a.logMessage();
 
 		// KeyPair a()
-		
+
 	} catch (std::invalid_argument e) {
 		cout << "Ошибка! " << e.what() << endl;
 	} catch (std::exception e) {

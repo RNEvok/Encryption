@@ -590,7 +590,7 @@ int main() {
 				cout << a.getAccumatorWithSign() << " % " << b.getAccumatorWithSign();
 				c.logNumber();
 
-        BigInt expectedRes("1", true);
+        BigInt expectedRes("1");
         test(c == expectedRes);
 				cout << endl;
 			}
@@ -612,7 +612,7 @@ int main() {
 				cout << a.getAccumatorWithSign() << " % " << b.getAccumatorWithSign();
 				c.logNumber();
 
-        BigInt expectedRes("1", true);
+        BigInt expectedRes("1");
         test(c == expectedRes);
 				cout << endl;
 			}
@@ -921,7 +921,7 @@ int main() {
 				b %= a;
 				b.logNumber();
 
-        BigInt expectedRes("2", true);
+        BigInt expectedRes("2");
         test(b == expectedRes);
 				cout << endl;
 			}
@@ -945,7 +945,7 @@ int main() {
 				b %= a;
 				b.logNumber();
 
-        BigInt expectedRes("23", true);
+        BigInt expectedRes("23");
         test(b == expectedRes);
 				cout << endl;
 			}
@@ -1012,31 +1012,58 @@ int main() {
 
 		}
 
-		list<BigInt> numbersList;
-		numbersList.push_back(BigInt("1"));
-		numbersList.push_back(BigInt("133"));
-		numbersList.push_back(BigInt("0"));
-		numbersList.push_back(BigInt("17", true));
-		numbersList.push_back(BigInt("244"));
-		numbersList.push_back(BigInt("137", true));
-		numbersList.push_back(BigInt("99999998888888888888888"));
-		numbersList.push_back(BigInt("1111111"));
-		numbersList.push_back(BigInt("1", true));
-		numbersList.push_back(BigInt("55"));
+		{
+			cout << "\nВозведение в степень: " << endl;
+			{
+				BigInt a("2");
+				BigInt b("60");
+				BigInt c = pow(a, b);
+				cout << a.getAccumatorWithSign() << " ** " << b.getAccumatorWithSign();
+				c.logNumber();
 
-		cout << "\nДан список чисел: " << endl;
-		for (auto num : numbersList)
-			num.logNumber();
+        BigInt expectedRes("1152921504606846976");
+        test(c == expectedRes);
+				cout << endl;
+			}
 
-		cout << "\nПо возрастанию: " << endl;
-		numbersList.sort([](BigInt& a, BigInt& b) {return a < b;});
-		for (auto num : numbersList)
-			num.logNumber();
+			{
+				BigInt a("2", true);
+				BigInt b("59");
+				BigInt c = pow(a, b);
+				cout << a.getAccumatorWithSign() << " ** " << b.getAccumatorWithSign();
+				c.logNumber();
 
-		cout << "\nПо убыванию: " << endl;
-		numbersList.sort([](BigInt& a, BigInt& b) {return a > b;});
-		for (auto num : numbersList)
-			num.logNumber();
+        BigInt expectedRes("576460752303423488", true);
+        test(c == expectedRes);
+				cout << endl;
+			}
+		}
+
+		// list<BigInt> numbersList;
+		// numbersList.push_back(BigInt("1"));
+		// numbersList.push_back(BigInt("133"));
+		// numbersList.push_back(BigInt("0"));
+		// numbersList.push_back(BigInt("17", true));
+		// numbersList.push_back(BigInt("244"));
+		// numbersList.push_back(BigInt("137", true));
+		// numbersList.push_back(BigInt("99999998888888888888888"));
+		// numbersList.push_back(BigInt("1111111"));
+		// numbersList.push_back(BigInt("1", true));
+		// numbersList.push_back(BigInt("55"));
+
+		// cout << "\nДан список чисел: " << endl;
+		// for (auto num : numbersList)
+		// 	num.logNumber();
+
+		// cout << "\nПо возрастанию: " << endl;
+		// numbersList.sort([](BigInt& a, BigInt& b) {return a < b;});
+		// for (auto num : numbersList)
+		// 	num.logNumber();
+
+		// cout << "\nПо убыванию: " << endl;
+		// numbersList.sort([](BigInt& a, BigInt& b) {return a > b;});
+		// for (auto num : numbersList)
+		// 	num.logNumber();
 
     cout << "Провалено тестов: ";
     if (testsFailed > 0)

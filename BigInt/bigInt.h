@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <initializer_list>
 #include <exception>
+#include <future>
+#include </opt/homebrew/opt/libomp/include/omp.h>
+
 #include "./../MyMath/myMath.h"
 
 using namespace std;
@@ -13,6 +16,7 @@ using namespace std;
 #define NOTATION 10
 #define ZERO "0"
 #define ONE "1"
+#define MAX_NUM_LENGTH_FOR_DEFAULT_MULTIPLICATION 4
 // Вектор символов
 typedef vector<char> CharVector;
 // Вектор целых
@@ -25,6 +29,12 @@ string charVectorToString(CharVector* a);
 
 // Приведение строки к вектору символов
 CharVector stringToCharVector(string s);
+
+// Дописать нули в начало вектора
+CharVector shiftRight(CharVector number, long long shiftPower);
+
+// Дописать нули в конец вектора
+CharVector shiftLeft(CharVector number, long long shiftPower);
 
 // Приведение символа к числу
 int charToInt(char c);
@@ -115,6 +125,11 @@ class BigInt {
     // Возвращает информацию о знаке числа
     bool getIsNegative() {
       return isNegative;
+    };
+
+    // Возвращает абсолютную величину a
+    friend BigInt abs(BigInt a) {
+      return BigInt(a.getAccumator());
     };
 
   // Перегрузки операторов
@@ -243,14 +258,17 @@ class BigInt {
     return (*this = *this * other);
   };
 
+  // Возвращает промежуточное делимое для операции деления
+  friend int findQuotient(BigInt b, BigInt aPart);
+
   friend BigInt operator / (BigInt aSigned, BigInt bSigned) {
     bool resultWillBeNegative = aSigned.isNegative != bSigned.isNegative;
 
-    BigInt a(aSigned.getAccumator());
-    BigInt b(bSigned.getAccumator());
+    string aStr = aSigned.getAccumator();
+    string bStr = bSigned.getAccumator();
 
-    string aStr = a.getAccumator();
-    string bStr = b.getAccumator();
+    BigInt a(aStr);
+    BigInt b(bStr);
 
     if (equal(bStr, ZERO))
       throw (std::invalid_argument("Деление на ноль!"));
@@ -263,14 +281,14 @@ class BigInt {
 
     // Происходит деление на маленькое число
     if (bStr.length() == 1) {
-      int number_second_integer = charToInt(b.accumulator.front());
-      long long in_mind = 0;
+      int bInt = charToInt(b.accumulator.front());
+      long long inMind = 0;
       long long composition;
 
       for (long long i = 0; i < a.length(); i++) {
-        composition = (long long)charToInt(a.accumulator[i]) + in_mind * (long long)NOTATION;
-        a.accumulator[i] = intToChar(composition / number_second_integer);
-        in_mind = composition % number_second_integer;
+        composition = charToInt(a.accumulator[i]) + inMind * NOTATION;
+        a.accumulator[i] = intToChar(composition / bInt);
+        inMind = composition % bInt;
       }
 
       deleteLeadingZeros(&a.accumulator);
@@ -281,31 +299,16 @@ class BigInt {
     BigInt result(ZERO, resultWillBeNegative);
     BigInt aPart;
 
-    int quotient, left, middle, right;
-    BigInt tmp;
     for (long long i = 0; i < a.length(); i++) {
       aPart.accumulator.push_back(a.accumulator[i]);
-      quotient = 0;
-      left = 0;
-      right = NOTATION;
-
-      while (left <= right) {
-        middle = (left + right) / 2;
-        tmp = b * BigInt(middle);
-
-        if (lowerOrEqual(tmp.getAccumator(), aPart.getAccumator())) {
-          quotient = middle;
-          left = middle + 1;
-        } else
-          right = middle - 1;
-      }
+      int quotient = findQuotient(b, aPart);
       
       aPart -= b * BigInt(quotient);
 
       if (!result.accumulator.empty() || quotient != 0)
         result.accumulator.push_back(intToChar(quotient));
 
-      if (aPart == 0)
+      if (aPart == BigInt(0))
         aPart.accumulator.resize(0);
     }
 
@@ -320,7 +323,7 @@ class BigInt {
 
   // Остаток от деления
   friend BigInt operator % (BigInt a, BigInt b) {
-    return (a - (a / b * b));
+    return abs(a - (a / b * b));
   };
 
   // Присваивающее остаток от деления
@@ -336,6 +339,9 @@ const BigInt B_THREE(3);
 
 // Вектор больших чисел
 typedef vector<BigInt> BigIntVector;
+
+// Возвращает результат возведения a в степень b
+BigInt pow(BigInt a, BigInt b);
 
 // Возвращает случайный BigInt длины len
 BigInt randomBigInt(unsigned len);

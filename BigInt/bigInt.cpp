@@ -20,6 +20,23 @@ CharVector stringToCharVector(string s) {
   return a;
 };
 
+CharVector shiftRight(CharVector number, long long shiftPower) {
+  number.reserve(shiftPower);
+  for (long long i = 0; i < shiftPower; i++)
+    number.insert(number.begin(), intToChar(0));
+
+  return number;
+}
+
+CharVector shiftLeft(CharVector number, long long shiftPower) {
+  number.resize(number.size() + shiftPower);
+
+  for (long long i = 0; i < shiftPower; i++)
+    number.push_back(intToChar(0));
+
+  return number;
+}
+
 void deleteZerosAtEnd(CharVector* a) {
   while (a->size() > 0 && a->back() == '0')
     a->pop_back();
@@ -163,23 +180,18 @@ string multiplicationInner(CharVector a, CharVector b) {
   reverse(a.begin(), a.end());
   reverse(b.begin(), b.end());
 
-  IntVector stack;
-  stack.resize(a.size() + b.size() + 1);
+  IntVector stack(a.size() + b.size() + 1);
 
   // Цифры перемножаются и записываются в stack
+  #pragma omp parallel for
   for (int i = 0; i < a.size(); i++)
-    for (int j = 0; j < b.size(); j++) {
-      char aChar = a[i];
-      char bChar = b[j];
-      int aInt = charToInt(aChar);
-      int bInt = charToInt(bChar);
-
-      stack[i + j] += aInt * bInt;
-    }
+    for (int j = 0; j < b.size(); j++)
+      stack[i + j] += charToInt(a[i]) * charToInt(b[j]);
 
   // Обработка stack
   // в ячейке стека должна остаться одна цифра,
   // а десятки и прочие порядки переносятся на позицию выше в stack
+  #pragma omp parallel for
   for (int i = 0; i < stack.size(); i++) {
     // Получение цифры
     int num = stack[i] % NOTATION;
@@ -191,7 +203,7 @@ string multiplicationInner(CharVector a, CharVector b) {
     // Высшие порядки переносятся вверх
     if (stack[i + 1])
       stack[i + 1] += move;
-    else if (move != 0)
+    else if (move)
       stack[i + 1] = move;
   }
 
@@ -200,6 +212,137 @@ string multiplicationInner(CharVector a, CharVector b) {
   reverse(stackChar.begin(), stackChar.end());
 
   return charVectorToString(&stackChar);
+};
+
+// CharVector multiplicationInnerSmallNumbers(CharVector a, CharVector b) {
+//   reverse(a.begin(), a.end());
+//   reverse(b.begin(), b.end());
+
+//   IntVector stack(a.size() + b.size() + 1);
+
+//   // Цифры перемножаются и записываются в stack
+//   for (int i = 0; i < a.size(); i++)
+//     for (int j = 0; j < b.size(); j++)
+//       stack[i + j] += charToInt(a[i]) * charToInt(b[j]);
+
+//   // Обработка stack
+//   // в ячейке стека должна остаться одна цифра,
+//   // а десятки и прочие порядки переносятся на позицию выше в stack
+//   for (int i = 0; i < stack.size(); i++) {
+//     // Получение цифры
+//     int num = stack[i] % NOTATION;
+//     // Переносится вверх
+//     int move = stack[i] / NOTATION;
+//     // Установка цифры
+//     stack[i] = num;
+
+//     // Высшие порядки переносятся вверх
+//     if (stack[i + 1])
+//       stack[i + 1] += move;
+//     else if (move)
+//       stack[i + 1] = move;
+//   }
+
+//   CharVector stackChar = intVectorToCharVector(&stack);
+//   deleteZerosAtEnd(&stackChar);
+//   reverse(stackChar.begin(), stackChar.end());
+
+//   return stackChar;
+// };
+
+// CharVector multiplicationInner(CharVector a, CharVector b, bool iterationThirst = true) {
+//   if (min(a.size(), b.size()) <= MAX_NUM_LENGTH_FOR_DEFAULT_MULTIPLICATION)
+//     return multiplicationInnerSmallNumbers(a, b);
+  
+//   if (a.size() % 2 != 0)
+//     a.insert(a.begin(), 0);
+  
+//   if (b.size() % 2 != 0)
+//     b.insert(b.begin(), 0);
+
+//   if (a.size() > b.size())
+//     b = shiftRight(b, a.size() - b.size());
+//   else
+//     a = shiftRight(a, b.size() - a.size());
+  
+//   long long numsSize = a.size();
+//   long long partSize = numsSize / 2;
+//   CharVector aPartLeft;
+//   CharVector aPartRight;
+//   CharVector bPartLeft;
+//   CharVector bPartRight;
+//   aPartLeft.resize(partSize);
+//   aPartRight.resize(partSize);
+//   bPartLeft.resize(partSize);
+//   bPartRight.resize(partSize);
+//   copy(a.begin(), a.begin() + partSize, aPartLeft.begin());
+//   copy(b.begin(), b.begin() + partSize, bPartLeft.begin());
+//   copy(a.begin() + partSize, a.begin() + numsSize, aPartRight.begin());
+//   copy(b.begin() + partSize, b.begin() + numsSize, bPartRight.begin());
+//   CharVector pFirst;
+//   CharVector pSecond;
+//   CharVector pThird;
+
+//   if (iterationThirst && thread::hardware_concurrency() >= 3) {
+//     auto thread_first = async(multiplicationInner, aPartLeft, bPartLeft, false);
+//     auto thread_second = async(multiplicationInner, aPartRight, bPartRight, false);
+//     pThird = multiplicationInner(_zeroes_leading_remove(aPartLeft) + _zeroes_leading_remove(aPartRight), _zeroes_leading_remove(bPartLeft) + _zeroes_leading_remove(bPartRight), false);
+//     pFirst = thread_first.get();
+//     pSecond = thread_second.get();
+//   } else if (iterationThirst && thread::hardware_concurrency() == 2) {
+//     auto thread_first = async(multiplicationInner, aPartLeft, bPartLeft, false);
+//     pSecond = multiplicationInner(aPartRight, bPartRight, false);
+//     pThird = multiplicationInner(_zeroes_leading_remove(aPartLeft) + _zeroes_leading_remove(aPartRight), _zeroes_leading_remove(bPartLeft) + _zeroes_leading_remove(bPartRight), false);
+//     pFirst = thread_first.get();
+//   } else {
+//     pFirst = multiplicationInner(aPartLeft, bPartLeft, false);
+//     pSecond = multiplicationInner(aPartRight, bPartRight, false);
+//     pThird = multiplicationInner(_zeroes_leading_remove(aPartLeft) + _zeroes_leading_remove(aPartRight), _zeroes_leading_remove(bPartLeft) + _zeroes_leading_remove(bPartRight), false);
+//   }
+
+//   return shiftLeft(pFirst, numsSize) + shiftLeft(pThird - (pFirst + pSecond), partSize) + pSecond;
+// };
+
+int findQuotient(BigInt b, BigInt aPart) { 
+  string aPartStr = aPart.getAccumator();
+
+  int quotient = 0;
+  int left = 0; 
+  int right = NOTATION;
+
+  while (left <= right) {
+    int middle = (left + right) / 2;
+    BigInt tmp = b * BigInt(middle);
+
+    if (lowerOrEqual(tmp.getAccumator(), aPartStr)) {
+      quotient = middle;
+      left = middle + 1;
+    } else
+      right = middle - 1;
+  }
+
+  return quotient;
+}
+
+BigInt pow(BigInt a, BigInt b) {
+  if (a == B_ZERO && b == B_ZERO)
+    throw (std::invalid_argument("Exponentiation is not possible. Cannot raise zero to zero degree."));
+
+  if (b < B_ZERO) 
+    throw (std::invalid_argument("Exponentiation is not possible. Specified number is less than zero."));
+  
+  BigInt result(1);
+  while (b != B_ZERO) {
+    if (isEven(b)) {
+      b /= B_TWO;
+      a *= a;
+    } else {
+      b--;
+      result *= a;
+    }
+  }
+
+  return result;
 };
 
 BigInt randomBigInt(unsigned len) {
@@ -226,9 +369,7 @@ BigIntVector intVectorToBigIntVector(IntVector a) {
 };
 
 bool isOdd(BigInt num) {
-  string s = num.getAccumator();
-  
-  char lastDigit = s.back();
+  char lastDigit = num.getAccumator().back();
   int lastDigitInt = charToInt(lastDigit);
 
   return (lastDigitInt % 2);

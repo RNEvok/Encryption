@@ -1,7 +1,7 @@
 #include "./../Encryption/encryption.h"
 
 // Необходимая длина простого числа
-#define PRIME_LENGTH 64
+#define PRIME_LENGTH 20
 // Число итераций в тесте Миллера-Рабина
 #define MILLER_RABIN_TEST_ITERATIONS 16
 // Стандартные значения открытой экспоненты (простые из чисел Ферма)
