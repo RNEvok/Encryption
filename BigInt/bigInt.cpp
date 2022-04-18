@@ -184,9 +184,11 @@ string multiplicationInner(CharVector a, CharVector b) {
 
   // Цифры перемножаются и записываются в stack
   #pragma omp parallel for
-  for (int i = 0; i < a.size(); i++)
+  for (int i = 0; i < a.size(); i++) {
+    cout << "Thread: " << omp_get_thread_num() << " " << omp_get_max_threads() << endl;
     for (int j = 0; j < b.size(); j++)
       stack[i + j] += charToInt(a[i]) * charToInt(b[j]);
+  }
 
   // Обработка stack
   // в ячейке стека должна остаться одна цифра,

@@ -63,12 +63,18 @@ int main() {
 		// cout << "Кандидат: " << endl;
 		// a.logNumber();
 
-		// cout << "Thread %d: " << omp_get_thread_num( );
-		BigInt a = getLowLevelPrime(20);
-		cout << "Кандидат: " << endl;
-		a.logNumber();
-		bool ok = isMillerRabinTestOk(BigInt("6867760115452856200139921162967719673559"));
-		cout << "Тест Миллера-Рабина: " << ok << endl;
+		// cout << "Thread: " << omp_get_thread_num();
+		// BigInt a = getLowLevelPrime(20);
+		// cout << "Кандидат: " << endl;
+		// a.logNumber();
+		// bool ok = isMillerRabinTestOk(BigInt("6867760115452856200139921162967719673559"));
+		// cout << "Тест Миллера-Рабина: " << ok << endl;
+
+		cout << "Total threads: " << omp_get_max_threads() << endl;
+		BigInt a("491249400599388959949383888232395293523");
+		BigInt b("400599388959949383888232395293523400599388959949383888232395293523");
+		BigInt c = a * b;
+		c.logNumber();
 
 		// bool ok = isMillerRabinTestOk(a);
 		// cout << "Тест Миллера-Рабина: " << ok << endl;
