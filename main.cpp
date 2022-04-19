@@ -6,8 +6,9 @@ int main() {
 
 		AsymmetricEncryption RSA;
 
-		Message msg("Hello, world!");
-		cout << "Message: " << endl;
+		//Message msg("Hello, world!");
+		Message msg("Hello, world! Today is 17th april of 2022.");
+		// cout << "Message: " << endl;
 		cout << msg.text << endl;
 
 		Message secureMessage = RSA.encode(msg);

@@ -180,12 +180,11 @@ string multiplicationInner(CharVector a, CharVector b) {
   reverse(a.begin(), a.end());
   reverse(b.begin(), b.end());
 
-  IntVector stack(a.size() + b.size() + 1);
+  IntVector stack(a.size() + b.size());
 
-  // Цифры перемножаются и записываются в stack
-  #pragma omp parallel for
+  //Цифры перемножаются и записываются в stack
+  // // #pragma omp parallel for
   for (int i = 0; i < a.size(); i++) {
-    cout << "Thread: " << omp_get_thread_num() << " " << omp_get_max_threads() << endl;
     for (int j = 0; j < b.size(); j++)
       stack[i + j] += charToInt(a[i]) * charToInt(b[j]);
   }
@@ -193,7 +192,6 @@ string multiplicationInner(CharVector a, CharVector b) {
   // Обработка stack
   // в ячейке стека должна остаться одна цифра,
   // а десятки и прочие порядки переносятся на позицию выше в stack
-  #pragma omp parallel for
   for (int i = 0; i < stack.size(); i++) {
     // Получение цифры
     int num = stack[i] % NOTATION;
@@ -398,13 +396,14 @@ BigInt byteVectorToBigInt(ByteVector bytes) {
   BigInt q(1);
   BigInt result(0);
 
-  for (auto byte : bytes)
+  for (auto byte : bytes) {
     for (int i = 0; i < 8; i++) {
       BigInt p((byteToInt(byte) >> i) & 1);
 
       result += p * q;
       q *= B_TWO;
     }
+  }
 
   return result;
 };

@@ -1,9 +1,9 @@
 #include "./../Encryption/encryption.h"
 
 // Необходимая длина простого числа
-#define PRIME_LENGTH 20
+#define PRIME_LENGTH 64
 // Число итераций в тесте Миллера-Рабина
-#define MILLER_RABIN_TEST_ITERATIONS 16
+#define MILLER_RABIN_TEST_ITERATIONS 8
 // Стандартные значения открытой экспоненты (простые из чисел Ферма)
 const BigIntVector defaultPublicExponentValues {
   BigInt(65537),
@@ -110,7 +110,7 @@ class KeysGenerator {
     // Возвращает число, мультипликативно обратное к числу e по модулю φ
     BigInt multiplicativeInverseElement(BigInt e, BigInt φ) {
       BezoutResult r = bezout(e, φ);
-      // Проверка на то что r.gcd != 0 не нужна, e и φ взаимно простые по определению
+      // Проверка на то что r.gcd == 1 не нужна, e и φ взаимно простые по определению
       return (r.x % φ + φ) % φ;
     };
   protected:
@@ -121,6 +121,12 @@ class KeysGenerator {
       BigInt q = getPrime(PRIME_LENGTH);
       BigInt n = p * q;
       BigInt φ = (p - B_ONE) * (q - B_ONE);
+
+      cout << "p: ";
+      p.logNumber();
+
+      cout << "q: ";
+      q.logNumber();
 
       cout << "n: ";
       n.logNumber();

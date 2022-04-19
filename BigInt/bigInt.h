@@ -284,7 +284,7 @@ class BigInt {
       int bInt = charToInt(b.accumulator.front());
       long long inMind = 0;
       long long composition;
-
+      
       for (long long i = 0; i < a.length(); i++) {
         composition = charToInt(a.accumulator[i]) + inMind * NOTATION;
         a.accumulator[i] = intToChar(composition / bInt);
@@ -323,7 +323,7 @@ class BigInt {
 
   // Остаток от деления
   friend BigInt operator % (BigInt a, BigInt b) {
-    return abs(a - (a / b * b));
+    return (a - (a / b * b));
   };
 
   // Присваивающее остаток от деления

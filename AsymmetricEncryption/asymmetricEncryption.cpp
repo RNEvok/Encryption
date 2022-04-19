@@ -31,23 +31,6 @@ BigInt modularExponentiation(BigInt base, BigInt exponent, BigInt mod) {
   return (x % mod);
 };
 
-// BigInt modularExponentiation(BigInt base, BigInt exponent, BigInt mod) {
-//   BigInt x = B_ONE;
-//   BigInt y = base;
-
-//   #pragma omp for
-//   for ( ; exponent > B_ZERO ;) {
-//     //x.logNumber();
-//     if (isOdd(exponent))
-//       x = (x * y) % mod;
-//     y = (y * y) % mod;
-//     // y.logNumber();
-//     exponent /= B_TWO;
-//   }
-
-//   return (x % mod);
-// };
-
 bool isMillerRabinTestOk(BigInt candidate) {
   if (candidate < B_TWO)
     return false;
@@ -61,6 +44,7 @@ bool isMillerRabinTestOk(BigInt candidate) {
     s /= B_TWO;
 
   for (int i = 0; i < MILLER_RABIN_TEST_ITERATIONS; i++) {
+    cout << "Miller-Rabin test iteration " << i << ":" << endl; 
     clock_t tic1 = clock();
     BigInt a = BigInt(rand()) % canditateMinusOne + B_ONE;
     BigInt temp = s;
