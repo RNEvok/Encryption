@@ -1,3 +1,4 @@
+#include <map>
 #include "./../BigInt/bigInt.hpp"
 
 // Первые простые числа

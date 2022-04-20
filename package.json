@@ -6,6 +6,7 @@
     "c": "g++ main.cpp AsymmetricEncryption/asymmetricEncryption.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out",
     "test": "g++ -Xpreprocessor -fopenmp -L/opt/homebrew/opt/libomp/lib -lomp tests.cpp AsymmetricEncryption/asymmetricEncryption.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out",
     "testOmp": "g++ -Xpreprocessor -fopenmp -L/opt/homebrew/opt/libomp/lib -lomp tests.cpp AsymmetricEncryption/asymmetricEncryption.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out",
-    "unitBigInt": "g++ -Xpreprocessor -fopenmp -L/opt/homebrew/opt/libomp/lib -lomp BigInt/tests.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out"
+    "unitBigInt": "g++ -Xpreprocessor -fopenmp -L/opt/homebrew/opt/libomp/lib -lomp BigInt/tests.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out",
+    "testCaesar": "g++ Caesar/tests.cpp Caesar/caesar.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out"
   }
 }
