@@ -165,7 +165,6 @@ class BigInt {
 const BigInt B_ZERO(0);
 const BigInt B_ONE(1);
 const BigInt B_TWO(2);
-const BigInt B_THREE(3);
 
 // Вектор больших чисел
 typedef vector<BigInt> BigIntVector;
