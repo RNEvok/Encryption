@@ -41,7 +41,7 @@ Message CaesarEncryption::decode(Message m) {
 };
 
 Message CaesarEncryption::decode(Message m, int shift) {
-  Message shiftedBackMsg = this->encode(m, -shift);
+  Message shiftedBackMsg = this->encode(m, -shift + this->n);
 
   return Message(shiftedBackMsg.text, false);
 };
