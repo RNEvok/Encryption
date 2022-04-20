@@ -1,4 +1,4 @@
-#include "./../BigInt/bigInt.h"
+#include "./../BigInt/bigInt.hpp"
 
 // Первые простые числа
 const IntVector firstPrimes {
@@ -35,31 +35,28 @@ class Message {
     string text;
     bool isSecure;
 
-    Message(string text, bool isSecure = false) {
-      this->text = text;
-      this->isSecure = isSecure;
-    };
+    // Конструктор по умолчанию
+    Message(string text, bool isSecure = false);
 
-    void logMessage() {
-      cout << this->text << endl;
-    };
+    // Вывод сообщения в консоль
+    void logMessage();
 
-    ByteVector convertToBytes() {
-      return stringToByteVector(text);
-    };
+    // Преобразование text в ByteVector
+    ByteVector convertToBytes();
 
-    BigInt convertToBigInt() {
-      return byteVectorToBigInt(this->convertToBytes());
-    };
+    // Преобразование text в BigInt
+    BigInt convertToBigInt();
 };
 
 class Encoder {
   protected:
+    // Шифрование
     virtual Message encode(Message m) = 0;
 };
 
 class Decoder {
   protected:
+    // Дешифрование
     virtual Message decode(Message m) = 0;
 };
 

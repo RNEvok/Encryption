@@ -1,4 +1,4 @@
-#include "bigInt.h"
+#include "bigInt.hpp"
 #include <list>
 
 int testsFailed = 0;
@@ -590,7 +590,7 @@ int main() {
 				cout << a.getAccumatorWithSign() << " % " << b.getAccumatorWithSign();
 				c.logNumber();
 
-        BigInt expectedRes("1");
+        BigInt expectedRes("1", true);
         test(c == expectedRes);
 				cout << endl;
 			}
@@ -612,7 +612,7 @@ int main() {
 				cout << a.getAccumatorWithSign() << " % " << b.getAccumatorWithSign();
 				c.logNumber();
 
-        BigInt expectedRes("1");
+        BigInt expectedRes("1", true);
         test(c == expectedRes);
 				cout << endl;
 			}
@@ -921,7 +921,7 @@ int main() {
 				b %= a;
 				b.logNumber();
 
-        BigInt expectedRes("2");
+        BigInt expectedRes("2", true);
         test(b == expectedRes);
 				cout << endl;
 			}
@@ -945,7 +945,7 @@ int main() {
 				b %= a;
 				b.logNumber();
 
-        BigInt expectedRes("23");
+        BigInt expectedRes("23", true);
         test(b == expectedRes);
 				cout << endl;
 			}

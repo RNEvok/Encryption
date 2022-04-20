@@ -1,4 +1,4 @@
-#include "./myMath.h"
+#include "./myMath.hpp"
 #include <time.h>
 #include <exception>
 

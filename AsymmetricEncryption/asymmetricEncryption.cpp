@@ -1,4 +1,4 @@
-#include "./asymmetricEncryption.h"
+#include "./asymmetricEncryption.hpp"
 
 BigInt getLowLevelPrime(unsigned len) {
   while (true) {
@@ -122,4 +122,137 @@ BezoutResult bezout(BigInt a, BigInt b) {
   std::swap(r.x, r.y);
 
   return {r.x, r.y - a / b * r.x, r.gcd};
+};
+
+PublicKey::PublicKey() {
+  e = B_ZERO;
+  n = B_ZERO;
+};
+
+PublicKey::PublicKey(BigInt e, BigInt n) {
+  this->e = e;
+  this->n = n;
+};
+
+PrivateKey::PrivateKey() {
+  d = B_ZERO;
+  n = B_ZERO;
+};
+
+PrivateKey::PrivateKey(BigInt d, BigInt n) {
+  this->d = d;
+  this->n = n;
+};
+
+KeyPair::KeyPair() {};
+
+KeyPair::KeyPair(PublicKey publicKey, PrivateKey privateKey) {
+  this->publicKey = publicKey;
+  this->privateKey = privateKey;
+};
+
+PublicKey KeyPair::getPublicKey() {
+  return this->publicKey;
+};
+
+PrivateKey KeyPair::getPrivateKey() {
+  return this->privateKey;
+};
+
+BigInt KeysGenerator::getPublicExponent(BigInt φ) {
+  BigIntVector variants = defaultPublicExponentValues;
+
+  for (auto v : variants)
+    if (steinGCD(v, φ) == B_ONE)
+      return v;
+
+  throw (std::invalid_argument("Cant get public exponent (φ has GCD != 1 with every Prime Ferma number)"));
+};
+
+BigInt KeysGenerator::multiplicativeInverseElement(BigInt e, BigInt φ) {
+  BezoutResult r = bezout(e, φ);
+  // Проверка на то что r.gcd == 1 не нужна, e и φ взаимно простые по определению
+  return (r.x % φ + φ) % φ;
+};
+
+KeysGenerator::KeysGenerator() {
+  BigInt p = getPrime(PRIME_LENGTH);
+  BigInt q = getPrime(PRIME_LENGTH);
+  BigInt n = p * q;
+  BigInt φ = (p - B_ONE) * (q - B_ONE);
+
+  cout << "p: ";
+  p.logNumber();
+
+  cout << "q: ";
+  q.logNumber();
+
+  cout << "n: ";
+  n.logNumber();
+
+  cout << "φ: ";
+  φ.logNumber();
+
+  BigInt e = getPublicExponent(φ);
+  cout << "e: ";
+  e.logNumber();
+  
+  BigInt d = multiplicativeInverseElement(e, φ);
+  cout << "d: ";
+  d.logNumber();
+
+  PublicKey publicKey(e, n);
+  PrivateKey privateKey(d, n);
+  this->keys = KeyPair(publicKey, privateKey);
+};
+
+KeyPair KeysGenerator::getKeys() {
+  return this->keys;
+};
+
+AsymmetricEncryption::AsymmetricEncryption() {
+  KeysGenerator g;
+  this->keys = g.getKeys();
+};
+
+Message AsymmetricEncryption::encode(Message m) {
+  return this->encode(m, keys.getPublicKey());
+};
+
+Message AsymmetricEncryption::encode(Message m, PublicKey key) {
+  if (m.isSecure)
+    throw (std::invalid_argument("Cant encode message. Message is already encoded!"));
+
+  BigInt plainMsg = m.convertToBigInt();
+  cout << "plainMessage: " << endl;
+  plainMsg.logNumber();
+
+  if (plainMsg >= key.n)
+    throw (std::invalid_argument("Cant encode message. Message is too large! Try bigger RSA."));
+
+  BigInt cipherMsg = modularExponentiation(plainMsg, key.e, key.n);
+  string cipherMsgText = bigIntToString(cipherMsg);
+
+  return Message(cipherMsgText, true);
+};
+
+Message AsymmetricEncryption::decode(Message m) {
+  return this->decode(m, keys.getPrivateKey());
+};
+
+Message AsymmetricEncryption::decode(Message m, PrivateKey key) {
+  if (!m.isSecure)
+    throw (std::invalid_argument("Cant decode message. Message is already decoded!"));
+
+  string cipherMsgText = m.text;
+  // BigInt cipherMsg(m.text);
+  cout << "cipherMessage: " << endl;
+  cout << cipherMsgText << endl;
+  
+  BigInt cipherMsg = m.convertToBigInt();
+
+  BigInt plainMsg = modularExponentiation(cipherMsg, key.d, key.n);
+  string plainMsgText = bigIntToString(plainMsg);
+
+  return Message(plainMsgText, false);
 };

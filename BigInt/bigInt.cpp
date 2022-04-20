@@ -1,4 +1,4 @@
-#include "./bigInt.h"
+#include "./bigInt.hpp"
 
 string charVectorToString(CharVector* a) {
   if (!a->size())
@@ -65,6 +65,151 @@ CharVector intVectorToCharVector(IntVector* a) {
     b.push_back(intToChar(x));
 
   return b;
+};
+
+BigInt::BigInt(string numberStr, bool isNegative) {
+  accumulator = stringToCharVector(numberStr);
+  this->isNegative = isNegative;
+};
+
+BigInt::BigInt(long long number, bool isNegative) {
+  string numberStr = to_string(number);
+  accumulator = stringToCharVector(numberStr);
+  this->isNegative = isNegative;
+};
+
+void BigInt::logNumber() {
+  string s = charVectorToString(&accumulator);
+
+  cout << "\n" << (isNegative? "-": "") << s << endl;
+};
+
+size_t BigInt::length() {
+  return this->accumulator.size();
+};
+
+string BigInt::getAccumator() {
+  return charVectorToString(&accumulator);
+};
+
+string BigInt::getAccumatorWithSign() {
+  string sign = isNegative? "-": "";
+  return sign + charVectorToString(&accumulator);
+};
+
+bool BigInt::getIsNegative() {
+  return isNegative;
+};
+
+BigInt& BigInt::operator = (const BigInt& other) {
+  // Защита от самоприсваивания
+  if (this == &other)
+    return *this;
+
+  this->accumulator = other.accumulator;
+  this->isNegative = other.isNegative;
+
+  return *this;
+}
+
+bool BigInt::operator == (BigInt other) {
+  return (this->isNegative == other.isNegative && equal(this->getAccumator(), other.getAccumator()));
+};
+
+bool BigInt::operator < (BigInt other) {
+  if (equal(this->getAccumator(), ZERO) && equal(other.getAccumator(), ZERO))
+    return false;
+
+  if (this->isNegative && !other.isNegative)
+    return true;
+
+  if (!this->isNegative && other.isNegative)
+    return false;
+
+  if (this->isNegative && other.isNegative)
+    return lower(other.getAccumator(), this->getAccumator());
+
+  return (lower(this->getAccumator(), other.getAccumator()));
+};
+
+bool BigInt::operator > (BigInt other) {
+  return (other < *this);
+};
+
+bool BigInt::operator <= (BigInt other) {
+  return !(*this > other);
+};
+
+bool BigInt::operator >= (BigInt other) {
+  return !(*this < other);
+};
+
+BigInt BigInt::operator + (BigInt b) {
+  // a + b
+  if (!this->isNegative && !b.isNegative)
+    return (
+      BigInt(
+        additionInner(this->accumulator, b.accumulator, "", 0, false), 
+        false
+      )
+    );
+  // a - b
+  if (!this->isNegative && b.isNegative)
+    return (
+      BigInt(
+        additionInner(this->accumulator, b.accumulator, "", 0, true), 
+        lower(this->getAccumator(), b.getAccumator())
+      )
+    );
+  // -a + b
+  if (this->isNegative && !b.isNegative)
+    return (
+      BigInt(
+        additionInner(b.accumulator, this->accumulator, "", 0, true),
+        bigger(this->getAccumator(), b.getAccumator())
+      )
+    );
+  // -a - b = -(a + b)
+  return (
+    BigInt(
+      additionInner(this->accumulator, b.accumulator, "", 0, false), 
+      true
+    )
+  );
+};
+
+BigInt& BigInt::operator ++ (int) {
+  return (*this = BigInt(ONE) + *this);
+};
+
+BigInt& BigInt::operator += (const BigInt& other) {
+  return (*this = *this + other);
+};
+
+BigInt BigInt::operator - (BigInt b) {
+  BigInt minusB(b.getAccumator(), !b.isNegative);
+  return (*this + minusB);
+};
+
+BigInt& BigInt::operator -- (int) {
+  return (*this = *this - BigInt(ONE));
+};
+
+BigInt& BigInt::operator -= (const BigInt& other) {
+  return (*this = *this - other);
+};
+
+BigInt BigInt::operator * (BigInt b) {
+  return (
+    BigInt(
+      multiplicationInner(this->accumulator, b.accumulator),
+      this->isNegative != b.isNegative
+    )
+  );
+};
+
+BigInt& BigInt::operator *= (const BigInt& other) {
+  return (*this = *this * other);
 };
 
 bool bigger(string a, string b) {
@@ -324,6 +469,73 @@ int findQuotient(BigInt b, BigInt aPart) {
   return quotient;
 }
 
+BigInt BigInt::operator / (BigInt bSigned) {
+  bool resultWillBeNegative = this->isNegative != bSigned.isNegative;
+
+  string aStr = this->getAccumator();
+  string bStr = bSigned.getAccumator();
+
+  BigInt a(aStr);
+  BigInt b(bStr);
+
+  if (equal(bStr, ZERO))
+    throw (std::invalid_argument("Деление на ноль!"));
+
+  if (equal(aStr, ZERO) || lower(aStr, bStr))
+    return BigInt(ZERO, resultWillBeNegative);
+
+  if (equal(aStr, bStr))
+    return BigInt(ONE, resultWillBeNegative);
+
+  // Происходит деление на маленькое число
+  if (bStr.length() == 1) {
+    int bInt = charToInt(b.accumulator.front());
+    long long inMind = 0;
+    long long composition;
+    
+    for (long long i = 0; i < a.length(); i++) {
+      composition = charToInt(a.accumulator[i]) + inMind * NOTATION;
+      a.accumulator[i] = intToChar(composition / bInt);
+      inMind = composition % bInt;
+    }
+
+    deleteLeadingZeros(&a.accumulator);
+    a.isNegative = resultWillBeNegative;
+    return a;
+  }
+
+  BigInt result(ZERO, resultWillBeNegative);
+  BigInt aPart;
+
+  for (long long i = 0; i < a.length(); i++) {
+    aPart.accumulator.push_back(a.accumulator[i]);
+    int quotient = findQuotient(b, aPart);
+    
+    aPart -= b * BigInt(quotient);
+
+    if (!result.accumulator.empty() || quotient != 0)
+      result.accumulator.push_back(intToChar(quotient));
+
+    if (aPart == BigInt(0))
+      aPart.accumulator.resize(0);
+  }
+
+  deleteLeadingZeros(&result.accumulator);
+  return result;
+}
+
+BigInt& BigInt::operator /= (const BigInt& other) {
+  return (*this = *this / other);
+};
+
+BigInt BigInt::operator % (BigInt b) {
+  return (*this - (*this / b * b));
+};
+
+BigInt& BigInt::operator %= (const BigInt& other) {
+  return (*this = *this % other);
+};
+
 BigInt pow(BigInt a, BigInt b) {
   if (a == B_ZERO && b == B_ZERO)
     throw (std::invalid_argument("Exponentiation is not possible. Cannot raise zero to zero degree."));
@@ -343,6 +555,10 @@ BigInt pow(BigInt a, BigInt b) {
   }
 
   return result;
+};
+
+BigInt abs(BigInt a) {
+  return BigInt(a.getAccumator());
 };
 
 BigInt randomBigInt(unsigned len) {

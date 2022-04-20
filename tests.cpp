@@ -1,5 +1,5 @@
-#include "MyMath/myMath.h"
-#include "AsymmetricEncryption/asymmetricEncryption.h"
+#include "MyMath/myMath.hpp"
+#include "AsymmetricEncryption/asymmetricEncryption.hpp"
 #include <list>
 
 int main() {
@@ -63,18 +63,22 @@ int main() {
 		// cout << "Кандидат: " << endl;
 		// a.logNumber();
 
-		// cout << "Thread: " << omp_get_thread_num();
-		// BigInt a = getLowLevelPrime(20);
+		cout << "Total threads: " << omp_get_max_threads() << endl;
+		// BigInt a = getLowLevelPrime(100);
 		// cout << "Кандидат: " << endl;
 		// a.logNumber();
-		// bool ok = isMillerRabinTestOk(BigInt("6867760115452856200139921162967719673559"));
+		// bool ok = isMillerRabinTestOk(BigInt("85053461164796801949539541639542805770666392330682673302530819774105141531698707146930307290253537320447270457"));
 		// cout << "Тест Миллера-Рабина: " << ok << endl;
 
-		cout << "Total threads: " << omp_get_max_threads() << endl;
-		BigInt a("491249400599388959949383888232395293523");
-		BigInt b("400599388959949383888232395293523400599388959949383888232395293523");
-		BigInt c = a * b;
-		c.logNumber();
+		BigInt a("3606424576967919093705865277959324266530101739539046932559017030911149917983520574105683370314241690674112708913629934224080803490478759479623478054752686510877737477754308385512276007574641798168956250936617733106919345629889355671482887187706515839329371");
+		ByteVector b = bigIntToByteVector(a);
+		cout << "HERE " << b.size() << endl;
+
+		// cout << "Total threads: " << omp_get_max_threads() << endl;
+		// BigInt a("491249400599388959949383888232395293523");
+		// BigInt b("400599388959949383888232395293523400599388959949383888232395293523");
+		// BigInt c = a * b; // 196794209707056609970526590664283617136967469120413512013890305609171871757762063803541487299641325751529
+		// c.logNumber();
 
 		// bool ok = isMillerRabinTestOk(a);
 		// cout << "Тест Миллера-Рабина: " << ok << endl;
