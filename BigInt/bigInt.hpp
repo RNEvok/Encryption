@@ -15,12 +15,6 @@ using namespace std;
 #define NOTATION 10
 #define ZERO "0"
 #define ONE "1"
-// Вектор символов
-typedef vector<char> CharVector;
-// Вектор целых
-typedef vector<int> IntVector;
-// Вектор байтов
-typedef vector<byte> ByteVector;
 
 // Приведение вектора символов к строке
 string charVectorToString(CharVector* a);

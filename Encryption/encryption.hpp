@@ -29,6 +29,8 @@ const IntVector firstPrimes {
   997
 };
 
+const CharVector ENGLISH {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
 const BigIntVector firstPrimesBigInt = intVectorToBigIntVector(firstPrimes);
 
 class Message {

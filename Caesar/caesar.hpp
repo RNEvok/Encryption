@@ -1,7 +1,5 @@
 #include "./../Encryption/encryption.hpp"
 
-const CharVector ENGLISH {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-
 typedef map<char, int> AlphabetTable;
 
 class CaesarEncryption: public Encryption {
