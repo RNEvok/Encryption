@@ -7,15 +7,18 @@ int main() {
 		CharVector a {'A', 'B', 'C', 'D', 'E', 'F'};
 		DoubleVector p {0.2, 0.19, 0.16, 0.02, 0.39, 0.04};
 
-		ShannonFanoEncryption shannon(a, p, 2);
+		ShannonFanoEncryption shannon(ENGLISH, ENGLISH_PROBABILITIES, 2);
+		// ShannonFanoEncryption shannon(a, p, 2);
 
 		Message msg("Hello, world!");
+		//Message msg("DEBCEAEEBBFFACEBEDAB");
 		cout << msg.text << endl;
 
 		Message secureMessage = shannon.encode(msg);
 
 		cout << "secureMessage is secure: " << secureMessage.isSecure << endl;
 		secureMessage.logMessage();
+		cout << "1111000110100010001011011111111011000010111101111010"<< endl;
 
 		Message decodedMessage = shannon.decode(secureMessage);
 

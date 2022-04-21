@@ -1,6 +1,7 @@
 #include "./shannonFano.hpp"
 
 ShannonFanoEncryption::ShannonFanoEncryption(CharVector a, DoubleVector p, int blockSize) {
+  this->alplabet = a;
   this->blockSize = blockSize;
 
   ProbabilitiesTable probabilitiesTable;
@@ -51,12 +52,28 @@ ShannonFanoEncryption::ShannonFanoEncryption(CharVector a, DoubleVector p, int b
 
   this->sortByProbability(&probabilitiesTable);
   this->probabilitiesTable = probabilitiesTable;
+
+  cout << "\nТаблица вероятностей появления символов (слов):" << endl;
+  for (auto el : this->probabilitiesTable)
+    cout << el.symbol << " " << el.probability << endl;
+
   this->codes = codes;
   this->createCodes(0, probabilitiesTable.size() - 1);
+
+  cout << "\nТаблица кодовых слов:" << endl;
+  for (auto c : this->codes) {
+    cout << c.first << " " << c.second << endl;
+    codesInverse.insert(Codes::value_type(c.second, c.first));
+  }
+
   Codes codesInverse;
   for (auto c : this->codes)
     codesInverse.insert(Codes::value_type(c.second, c.first));
   this->codesInverse = codesInverse;
+
+  // cout << "\nInverse codes: " << endl;
+  // for (auto c : this->codesInverse)
+  //   cout << c.first << " " << c.second << endl;
 
   double avgLen = 0;
   for (auto el : this->probabilitiesTable)
@@ -66,7 +83,7 @@ ShannonFanoEncryption::ShannonFanoEncryption(CharVector a, DoubleVector p, int b
 };
 
 void ShannonFanoEncryption::sortByProbability(ProbabilitiesTable* t) {
-  sort(t->begin(), t->end(), [](Symbol& a, Symbol& b) {return a.probability > b.probability;});
+  sort(t->begin(), t->end(), [](Symbol& a, Symbol& b) {return a.probability < b.probability;});
 };
 
 void ShannonFanoEncryption::createCodes(int start, int end) {
@@ -77,6 +94,7 @@ void ShannonFanoEncryption::createCodes(int start, int end) {
     this->codes.at(this->probabilitiesTable[end].symbol) += '0';
   } else {
     int splitIndex = this->getSplitIndex(start, end);
+    cout << "Best split index: " << splitIndex << endl;
     
     for (int i = start; i <= end; i++) {
       if (i >= splitIndex)
@@ -91,7 +109,7 @@ void ShannonFanoEncryption::createCodes(int start, int end) {
 };
 
 int ShannonFanoEncryption::getSplitIndex(int start, int end) {
-  int min = INT_MAX;
+  double min = INFINITY;
   int minIndex = -1;
 
   double sumLeft = 0;
@@ -118,8 +136,59 @@ int ShannonFanoEncryption::getSplitIndex(int start, int end) {
   return minIndex;
 };
 
+string ShannonFanoEncryption::savePunctuation(string plainMsg) {
+  string withoutPunctuation = "";
+  IntVector uppercasePositions;
+  IntVector punctuationPositions;
+  CharVector punctuation;
+  
+  for (int i = 0; i < plainMsg.length(); i++) {
+    char upperChar = toupper(plainMsg[i]);
+
+    if (this->symbolPr.find(upperChar) == this->symbolPr.end()) {
+      punctuationPositions.push_back(i);
+      punctuation.push_back(plainMsg[i]);
+    } else {
+      if (upperChar == plainMsg[i])
+        uppercasePositions.push_back(i);
+      withoutPunctuation += plainMsg[i];
+    }
+  }
+
+  this->uppercasePositions = uppercasePositions;
+  this->punctuationPositions = punctuationPositions;
+  this->punctuation = punctuation;
+
+  return withoutPunctuation;
+};
+
+string ShannonFanoEncryption::withPunctuation(string plainMsg) {
+  string withPunctuation = "";
+
+  int i = 0;
+  int j = 0;
+  int k = 0;
+
+  for (int t = 0; t < plainMsg.length() + this->punctuationPositions.size(); t++) {
+    if (find(this->punctuationPositions.begin(), this->punctuationPositions.end(), t) != this->punctuationPositions.end())
+      withPunctuation += this->punctuation[j++];
+    else {
+      if (this->uppercasePositions[k] == i) {
+        withPunctuation += plainMsg[i];
+        k++;
+      } else
+        withPunctuation += tolower(plainMsg[i]);
+
+      i++;
+    }
+  };
+
+  return withPunctuation;
+};
+
 Message ShannonFanoEncryption::encode(Message m) {
-  string plainMsg = m.text;
+  string plainMsg =this->savePunctuation(m.text);
+  cout << "HEREE " << plainMsg << endl;
   if (plainMsg.length() % this->blockSize != 0)
     throw (std::invalid_argument("Ошибка! Сообщение не разбить на блоки заданного размера!"));
 
@@ -129,7 +198,7 @@ Message ShannonFanoEncryption::encode(Message m) {
     string key = "";
 
     for (int j = 0; j < this->blockSize; j++)
-      key += plainMsg[i + j];
+      key += toupper(plainMsg[i + j]);
 
     cipherMsg += this->codes.at(key);
   }
@@ -142,14 +211,21 @@ Message ShannonFanoEncryption::decode(Message m) {
 
   string plainMsg = "";
 
-  for (int i = 0; i < cipherMsg.length(); i += this->blockSize) {
+  int i = 0;
+  
+  while (i < cipherMsg.length()) {
     string code = "";
 
-    for (int j = 0; j < this->blockSize; j++)
+    int j = 0;
+    while (this->codesInverse.find(code) == this->codesInverse.end()) {
       code += cipherMsg[i + j];
+      j++;
+    }
 
     plainMsg += this->codesInverse.at(code);
-  }
 
-  return Message(cipherMsg, false);
+    i += j;
+  }
+// return Message(plainMsg, false);
+  return Message(withPunctuation(plainMsg), false);
 };

@@ -49,6 +49,7 @@ static vector<vector<Type>> placementsReiterationsInner(vector<Type> M, int i, s
   return P;
 };
 
+// Получение размещений с повторениями для объектов любого типа
 template<class Type>
 vector<vector<Type>> placementsReiterations(vector<Type> M, size_t n, int k) {
   return placementsReiterationsInner(M, 0, n, k);

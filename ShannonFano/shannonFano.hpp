@@ -12,6 +12,8 @@ typedef vector<Symbol> ProbabilitiesTable;
 
 class ShannonFanoEncryption: public Encryption {
   private:
+    // Алфавит сообщения
+    CharVector alplabet;
     // Размер блока
     int blockSize;
     // Таблица вероятностей появления символов
@@ -25,17 +27,29 @@ class ShannonFanoEncryption: public Encryption {
     double entropy;
     // Средняя длина символа (ключа)
     double avgLen;
+    IntVector uppercasePositions;
+    IntVector punctuationPositions;
+    CharVector punctuation;
+
+    // Создать таблицу кодовых слов
+    void createCodes(int start, int end);
+
+    // Возвращает оптимальный индекс разделения
+    int getSplitIndex(int start, int end);
+
+    // Отсортировать таблицу вероятностей
+    void sortByProbability(ProbabilitiesTable* t);
   public:
     // Конструктор по умолчанию
     // a - набор символов; p - вероятности их появления
     // blockSize - размер блока
     ShannonFanoEncryption(CharVector a = ENGLISH, DoubleVector p = ENGLISH_PROBABILITIES, int blockSize = 1);
 
-    void createCodes(int start, int end);
+    // Возвращает строку без пунктуации
+    string savePunctuation(string plainMsg);
 
-    int getSplitIndex(int start, int end);
-
-    void sortByProbability(ProbabilitiesTable* t);
+    // Возвращает строку с пунктуацией
+    string withPunctuation(string plainMsg);
 
     Message encode(Message m);
 
