@@ -1,18 +1,39 @@
 @startuml Объектная модель
   !theme plain
-  skinparam BackgroundColor #B9D2F6
-  skinparam ObjectBorderColor #948BFF
-  skinparam ObjectBackgroundColor #FFFFFF
+  skinparam BackgroundColor #d2e3fc
+  skinparam ObjectBorderColor #4940ad
+  skinparam ObjectBackgroundColor #efedff
   skinparam Handwritten false
 
-  object Encryption
-  object AsymmetricEncryption
-  object Message
+  object Пользователь
+  object Кодировщик
+  object RSA
+  object Шифр_Цезаря
+  object Шифр_Шеннона
+  object Генератор_Ключей
+  object BigInt
 
-  Message --> Encryption : "Encode"
-  Message --> Encryption : "Decode"
+  Пользователь --> Кодировщик : "Зашифровать\nсообщение"
+  Пользователь --> Кодировщик : "Расшифровать\nсообщение"
+  Пользователь <-- Кодировщик : "Вернуть\nсообщение"
 
-  Encryption --> AsymmetricEncryption : "Encode\nmessage"
-  Encryption --> AsymmetricEncryption : "Decode\nmessage"
+  Кодировщик --> RSA : "Зашифровать\nсообщение"
+  Кодировщик --> RSA : "Расшифровать\nсообщение"
+  Кодировщик <-- RSA : "Вернуть\nсообщение"
+
+  Кодировщик --> Шифр_Цезаря : "Зашифровать\nсообщение"
+  Кодировщик --> Шифр_Цезаря : "Расшифровать\nсообщение"
+  Кодировщик <-- Шифр_Цезаря : "Вернуть\nсообщение"
+
+  Кодировщик --> Шифр_Шеннона : "Зашифровать\nсообщение"
+  Кодировщик --> Шифр_Шеннона : "Расшифровать\nсообщение"
+  Кодировщик <-- Шифр_Шеннона : "Вернуть\nсообщение"
+
+  RSA --> Генератор_Ключей : "Получить\nключи"
+  RSA <-- Генератор_Ключей : "Пара\nключей"
+  RSA --> BigInt : "Произвести\nоперацию\nнад большимиё\n целыми"
+  RSA <-- BigInt : "Результат\nоперации"
+  Генератор_Ключей --> BigInt : "Произвести\nоперацию\nнад большимиё\n целыми"
+  Генератор_Ключей <-- BigInt : "Результат\nоперации"
   
 @enduml

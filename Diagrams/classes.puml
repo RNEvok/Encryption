@@ -17,6 +17,7 @@
 
   class AsymmetricEncryption {
     -KeyPair keys;
+    +AsymmetricEncryption(Parameters params = Parameters())
     +Message encode(Message m)
     +Message encode(Message m, PublicKey key)
     +Message decode(Message m)
@@ -25,37 +26,42 @@
   class PublicKey {
     +BigInt e
     +BigInt n
+    +PublicKey(BigInt e, BigInt n)
   }
   class PrivateKey {
     +BigInt d
     +BigInt n
+    +PrivateKey(BigInt d, BigInt n)
   }
   class KeyPair {
     -PublicKey publicKey
     -PrivateKey privateKey
+    +KeyPair(PublicKey publicKey, PrivateKey privateKey)
     +PublicKey getPublicKey()
     +PrivateKey getPrivateKey()
   }
 
   class KeysGenerator {
     #KeyPair keys
+    +KeysGenerator(int primeLength)
     -BigInt getPublicExponent(BigInt φ)
     -BigInt multiplicativeInverseElement(BigInt e, BigInt φ)
     +KeyPair getKeys()
   }
 
-  class Caesar {
+  class CaesarEncryption {
     -int shift;
     -CharVector alphabet
     -AlphabetTable alphabetTable
     -int n
+    +CaesarEncryption(Parameters params = Parameters())
     +Message encode(Message m)
     +Message encode(Message m, int shift)
     +Message decode(Message m)
     +Message decode(Message m, int shift)
   }
 
-  class ShannonFano {
+  class ShannonFanoEncryption {
     -CharVector alplabet
     -int blockSize
     -SymbolProbabilitiesTable symbolPr
@@ -67,6 +73,7 @@
     -IntVector uppercasePositions
     -IntVector punctuationPositions
     -CharVector punctuation
+    +ShannonFanoEncryption(Parameters params = Parameters())
     -void createCodes(int start, int end)
     -int getSplitIndex(int start, int end)
     -void sortByProbability(ProbabilitiesTable* t)
@@ -84,8 +91,21 @@
     Message decode(Message m)
   }
 
+  class Parameters {
+    +int shift
+    +CharVector alphabet
+    +DoubleVector probabilities
+    +int blockSize
+    +int primeLength
+    +Parameters()
+    +void setShift(int shift)
+    +void setBlockSize(int blockSize)
+    +void setPrimeLength(int primeLength)
+  }
+
   class Encryptor {
     -Encryption* encryption
+    +Encryptor(Encryption* encryption)
     +void setStrategy(Encryption* encryption)
     +Message encode(Message m)
     +Message decode(Message m)
@@ -94,6 +114,8 @@
   class BigInt {
     -CharVector accumulator
     -bool isNegative
+    +BigInt(string numberStr = ZERO, bool isNegative = false)
+    +BigInt(long long number, bool isNegative = false)
     +void logNumber()
     +size_t length()
     +string getAccumator()
@@ -126,19 +148,18 @@
   Decoder <|-- Encryption
 
   Encryption <|.. AsymmetricEncryption
-  Encryption <|.. Caesar
-  Encryption <|.. ShannonFano
+  Encryption <|.. CaesarEncryption
+  Encryption <|.. ShannonFanoEncryption
   Encryption o-- Encryptor
   Encryption <-- Message
 
   AsymmetricEncryption *-- KeysGenerator
   AsymmetricEncryption <-- BigInt
-  ' AsymmetricEncryption *-- Encoder
-  ' AsymmetricEncryption *-- Decoder
+  AsymmetricEncryption o-- Parameters
+  CaesarEncryption o-- Parameters
+  ShannonFanoEncryption o-- Parameters
 
   KeysGenerator *-- KeyPair
   KeysGenerator <-- BigInt
-  ' Encoder <-- BigInt
-  ' Decoder <-- BigInt
   
 @enduml
