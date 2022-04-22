@@ -9,16 +9,27 @@
     +string text
     +bool isSecure
     +void logMessage()
+    +ByteVector convertToBytes()
+    +BigInt convertToBigInt()
   }
 
-  interface Encryption
+  abstract Encryption
 
   class AsymmetricEncryption {
+    -KeyPair keys;
+    +Message encode(Message m)
     +Message encode(Message m, PublicKey key)
+    +Message decode(Message m)
     +Message decode(Message m, PrivateKey key)
   }
-  class PublicKey
-  class PrivateKey
+  class PublicKey {
+    +BigInt e
+    +BigInt n
+  }
+  class PrivateKey {
+    +BigInt d
+    +BigInt n
+  }
   class KeyPair {
     -PublicKey publicKey
     -PrivateKey privateKey
@@ -28,14 +39,56 @@
 
   class KeysGenerator {
     #KeyPair keys
+    -BigInt getPublicExponent(BigInt φ)
+    -BigInt multiplicativeInverseElement(BigInt e, BigInt φ)
+    +KeyPair getKeys()
   }
 
-  interface Encoder {
-    #Message encode(Message m)
+  class Caesar {
+    -int shift;
+    -CharVector alphabet
+    -AlphabetTable alphabetTable
+    -int n
+    +Message encode(Message m)
+    +Message encode(Message m, int shift)
+    +Message decode(Message m)
+    +Message decode(Message m, int shift)
   }
 
-  interface Decoder {
-    #Message decode(Message m)
+  class ShannonFano {
+    -CharVector alplabet
+    -int blockSize
+    -SymbolProbabilitiesTable symbolPr
+    -ProbabilitiesTable probabilitiesTable
+    -Codes codes
+    -Codes codesInverse
+    -double entropy
+    -double avgLen 
+    -IntVector uppercasePositions
+    -IntVector punctuationPositions
+    -CharVector punctuation
+    -void createCodes(int start, int end)
+    -int getSplitIndex(int start, int end)
+    -void sortByProbability(ProbabilitiesTable* t)
+    +string savePunctuation(string plainMsg)
+    +string withPunctuation(string plainMsg)
+    +Message encode(Message m)
+    +Message decode(Message m)
+  }
+
+  abstract Encoder {
+    Message encode(Message m)
+  }
+
+  abstract Decoder {
+    Message decode(Message m)
+  }
+
+  class Encryptor {
+    -Encryption* encryption
+    +void setStrategy(Encryption* encryption)
+    +Message encode(Message m)
+    +Message decode(Message m)
   }
 
   class BigInt {
@@ -47,22 +100,22 @@
     +string getAccumatorWithSign()
     +bool getIsNegative()
     +BigInt& operator = (const BigInt& other)
-    +bool operator == (BigInt a, BigInt b)
-    +bool operator < (BigInt& left, BigInt& right)
-    +bool operator > (BigInt& left, BigInt& right)
-    +bool operator <= (BigInt& left, BigInt& right)
-    +bool operator >= (BigInt& left, BigInt& right)
-    +BigInt operator + (BigInt a, BigInt b)
+    +bool operator == (BigInt other)
+    +bool operator < (BigInt other)
+    +bool operator > (BigInt other)
+    +bool operator <= (BigInt other)
+    +bool operator >= (BigInt other)
+    +BigInt operator + (BigInt b)
     +BigInt& operator ++ (int)
     +BigInt& operator += (BigInt& other)
-    +BigInt operator - (BigInt a, BigInt b)
+    +BigInt operator - (BigInt b)
     +BigInt& operator -- (int)
     +BigInt& operator -= (const BigInt& other)
-    +BigInt operator * (BigInt a, BigInt b)
+    +BigInt operator * (BigInt b)
     +BigInt& operator *= (const BigInt& other)
-    +BigInt operator / (BigInt aSigned, BigInt bSigned)
+    +BigInt operator / (BigInt bSigned)
     +BigInt& operator /= (const BigInt& other)
-    +BigInt operator % (BigInt a, BigInt b)
+    +BigInt operator % (BigInt b)
     +BigInt& operator %= (const BigInt& other)
   }
 
@@ -73,6 +126,9 @@
   Decoder <|-- Encryption
 
   Encryption <|.. AsymmetricEncryption
+  Encryption <|.. Caesar
+  Encryption <|.. ShannonFano
+  Encryption o-- Encryptor
   Encryption <-- Message
 
   AsymmetricEncryption *-- KeysGenerator

@@ -27,6 +27,10 @@ Encryptor::~Encryptor() {
   delete encryption;
 };
 
+void Encryptor::setStrategy(Encryption* encryption) {
+  this->encryption = encryption;
+};
+
 Message Encryptor::encode(Message m) {
   return encryption->encode(m);
 };

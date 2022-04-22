@@ -188,7 +188,6 @@ string ShannonFanoEncryption::withPunctuation(string plainMsg) {
 
 Message ShannonFanoEncryption::encode(Message m) {
   string plainMsg =this->savePunctuation(m.text);
-  cout << "HEREE " << plainMsg << endl;
   if (plainMsg.length() % this->blockSize != 0)
     throw (std::invalid_argument("Ошибка! Сообщение не разбить на блоки заданного размера!"));
 

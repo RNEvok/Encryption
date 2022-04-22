@@ -45,27 +45,22 @@ bool isMillerRabinTestOk(BigInt candidate) {
 
   for (int i = 0; i < MILLER_RABIN_TEST_ITERATIONS; i++) {
     cout << "Miller-Rabin test iteration " << i << ":" << endl; 
-    clock_t tic1 = clock();
     BigInt a = BigInt(rand()) % canditateMinusOne + B_ONE;
     BigInt temp = s;
-    // cout << "here1" << endl; 
-    clock_t tic2 = clock();
     BigInt mod = modularExponentiation(a, temp, candidate);
-    clock_t tac2 = clock();
-    cout << "gap " << (double)(tac2-tic2) << endl;
-    // cout << "here2" << endl; 
 
     while (temp != canditateMinusOne && mod != B_ONE && mod != canditateMinusOne) {
       mod = (mod * mod) % candidate;
       temp *= B_TWO;
     }
 
-    if (mod != canditateMinusOne && isEven(temp))
+    if (mod != canditateMinusOne && isEven(temp)) {
+      cout << "Prime: \033[1;31m false \033[0m\n" << endl;
       return false;
-    clock_t tac1 = clock();
-    cout << "Large gap " << (double)(tac1-tic1) << endl;
+    }
   }
 
+  cout << "Prime: \033[1;32m true \033[0m\n" << endl;
   return true;
 };
 

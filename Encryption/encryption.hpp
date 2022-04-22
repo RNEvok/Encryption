@@ -82,6 +82,8 @@
       Encryptor(Encryption* encryption);
       // Деструктор
       ~Encryptor();
+
+      void setStrategy(Encryption* encryption);
       
       Message encode(Message m);
 

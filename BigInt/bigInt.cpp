@@ -328,7 +328,6 @@ string multiplicationInner(CharVector a, CharVector b) {
   IntVector stack(a.size() + b.size());
 
   //Цифры перемножаются и записываются в stack
-  // // #pragma omp parallel for
   for (int i = 0; i < a.size(); i++) {
     for (int j = 0; j < b.size(); j++)
       stack[i + j] += charToInt(a[i]) * charToInt(b[j]);

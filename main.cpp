@@ -14,13 +14,13 @@ int main() {
 
 		switch (type) {
 			case 0:
-				encryptor = Encryptor(new AsymmetricEncryption());
+				encryptor.setStrategy(new AsymmetricEncryption());
 				break;
 			case 1:
-				encryptor = Encryptor(new CaesarEncryption());
+				encryptor.setStrategy(new CaesarEncryption());
 				break;
 			case 2:
-				encryptor = Encryptor(new ShannonFanoEncryption());
+				encryptor.setStrategy(new ShannonFanoEncryption());
 				break;
 			default:
 				cout << "\n Необходимо выбрать один из предложенных методов." << endl;
@@ -29,20 +29,18 @@ int main() {
 
 		Message msg("Hello, world!");
 		// Message msg("Hello, world! Today is 17th april of 2022.");
-		// cout << "Message: " << endl;
 		cout << msg.text << endl;
 
 		Message secureMessage = encryptor.encode(msg);
 
-		cout << "secureMessage is secure: " << secureMessage.isSecure << endl;
+		cout << "\nЗашифрованное сообщение: " << endl;
 		secureMessage.logMessage();
 
 		Message decodedMessage = encryptor.decode(secureMessage);
 
-		cout << "decodedMessage is secure: " << decodedMessage.isSecure << endl;
+		cout << "\nРасшифрованное сообщение: " << endl;
 		decodedMessage.logMessage();
 		
-
 	} catch (std::invalid_argument e) {
 		cout << "Ошибка! " << e.what() << endl;
 	} catch (std::exception e) {

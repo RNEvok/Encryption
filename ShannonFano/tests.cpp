@@ -7,7 +7,7 @@ int main() {
 		CharVector a {'A', 'B', 'C', 'D', 'E', 'F'};
 		DoubleVector p {0.2, 0.19, 0.16, 0.02, 0.39, 0.04};
 
-		ShannonFanoEncryption shannon;
+		Encryptor shannon(new ShannonFanoEncryption());
 		// ShannonFanoEncryption shannon(a, p, 2);
 
 		Message msg("Hello, world!");

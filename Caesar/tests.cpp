@@ -4,7 +4,7 @@ int main() {
 	try {
 		srand((unsigned)time(NULL));
 
-    CaesarEncryption caesar(3);
+		Encryptor caesar(new CaesarEncryption());
 
 		Message msg("Hello, world!");
 		cout << msg.text << endl;
