@@ -1,6 +1,5 @@
-#include "AsymmetricEncryption/asymmetricEncryption.hpp"
-#include "Caesar/caesar.hpp"
-#include "ShannonFano/shannonFano.hpp"
+#include "Encryptor/encryptor.hpp"
+#include "Parameters/parameters.hpp"
 
 int main() {
 	try {
@@ -11,23 +10,36 @@ int main() {
 		cin >> type;
 
 		Encryptor encryptor;
+		Parameters params;
 
 		switch (type) {
 			case 0:
-				encryptor.setStrategy(new AsymmetricEncryption());
+				cout << "\nУкажите необходимый размер простых чисел p и q: ";
+				int primeLength;
+				cin >> primeLength;
+				params.setPrimeLength(primeLength);
+				encryptor.setStrategy(new AsymmetricEncryption(params));
 				break;
 			case 1:
-				encryptor.setStrategy(new CaesarEncryption());
+				cout << "\nУкажите сдвиг шифра: ";
+				int shift;
+				cin >> shift;
+				params.setShift(shift);
+				encryptor.setStrategy(new CaesarEncryption(params));
 				break;
 			case 2:
-				encryptor.setStrategy(new ShannonFanoEncryption());
+				cout << "\nУкажите размер блока для кодовых слов: ";
+				int blockSize;
+				cin >> blockSize;
+				params.setBlockSize(blockSize);
+				encryptor.setStrategy(new ShannonFanoEncryption(params));
 				break;
 			default:
 				cout << "\n Необходимо выбрать один из предложенных методов." << endl;
 				break;
 		}
 
-		Message msg("Hello, world!");
+		Message msg("Hello, world! Today is 22th april of 2022.");
 		// Message msg("Hello, world! Today is 17th april of 2022.");
 		cout << msg.text << endl;
 

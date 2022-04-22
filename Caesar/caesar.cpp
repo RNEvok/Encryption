@@ -1,13 +1,13 @@
 #include "./caesar.hpp"
 
-CaesarEncryption::CaesarEncryption(int shift, CharVector alphabet) {
-  this->shift = shift;
-  this->alphabet = alphabet;
-  this->n = alphabet.size();
+CaesarEncryption::CaesarEncryption(Parameters params) {
+  this->shift = params.shift;
+  this->alphabet = params.alphabet;
+  this->n = params.alphabet.size();
 
   AlphabetTable alphabetTable;
-  for (int i = 0; i < alphabet.size(); i++)
-    alphabetTable.insert(AlphabetTable::value_type(alphabet[i], i));
+  for (int i = 0; i < this->alphabet.size(); i++)
+    alphabetTable.insert(AlphabetTable::value_type(this->alphabet[i], i));
 
   this->alphabetTable = alphabetTable;
 };

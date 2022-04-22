@@ -170,9 +170,9 @@ BigInt KeysGenerator::multiplicativeInverseElement(BigInt e, BigInt φ) {
   return (r.x % φ + φ) % φ;
 };
 
-KeysGenerator::KeysGenerator() {
-  BigInt p = getPrime(PRIME_LENGTH);
-  BigInt q = getPrime(PRIME_LENGTH);
+KeysGenerator::KeysGenerator(int primeLength) {
+  BigInt p = getPrime(primeLength);
+  BigInt q = getPrime(primeLength);
   BigInt n = p * q;
   BigInt φ = (p - B_ONE) * (q - B_ONE);
 
@@ -205,8 +205,8 @@ KeyPair KeysGenerator::getKeys() {
   return this->keys;
 };
 
-AsymmetricEncryption::AsymmetricEncryption() {
-  KeysGenerator g;
+AsymmetricEncryption::AsymmetricEncryption(Parameters params) {
+  KeysGenerator g(params.primeLength);
   this->keys = g.getKeys();
 };
 

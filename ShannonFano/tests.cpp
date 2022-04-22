@@ -1,4 +1,4 @@
-#include "./shannonFano.hpp"
+#include "./../Encryptor/encryptor.hpp"
 
 int main() {
 	try {

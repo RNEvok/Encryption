@@ -1,4 +1,4 @@
-#include "./../Encryption/encryption.hpp"
+#include "./../Parameters/parameters.hpp"
 
 typedef map<char, int> AlphabetTable;
 
@@ -14,7 +14,7 @@ class CaesarEncryption: public Encryption {
     int n;
   public:
     // Конструктор по умолчанию
-    CaesarEncryption(int shift = 3, CharVector alphabet = ENGLISH);
+    CaesarEncryption(Parameters params = Parameters());
 
     Message encode(Message m);
 

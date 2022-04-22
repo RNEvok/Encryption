@@ -1,6 +1,10 @@
 #include "./shannonFano.hpp"
 
-ShannonFanoEncryption::ShannonFanoEncryption(CharVector a, DoubleVector p, int blockSize) {
+ShannonFanoEncryption::ShannonFanoEncryption(Parameters params) {
+  CharVector a = params.alphabet;
+  DoubleVector p = params.probabilities;
+  int blockSize = params.blockSize;
+
   this->alplabet = a;
   this->blockSize = blockSize;
 
@@ -70,10 +74,6 @@ ShannonFanoEncryption::ShannonFanoEncryption(CharVector a, DoubleVector p, int b
   for (auto c : this->codes)
     codesInverse.insert(Codes::value_type(c.second, c.first));
   this->codesInverse = codesInverse;
-
-  // cout << "\nInverse codes: " << endl;
-  // for (auto c : this->codesInverse)
-  //   cout << c.first << " " << c.second << endl;
 
   double avgLen = 0;
   for (auto el : this->probabilitiesTable)
@@ -173,7 +173,7 @@ string ShannonFanoEncryption::withPunctuation(string plainMsg) {
     if (find(this->punctuationPositions.begin(), this->punctuationPositions.end(), t) != this->punctuationPositions.end())
       withPunctuation += this->punctuation[j++];
     else {
-      if (this->uppercasePositions[k] == i) {
+      if (this->uppercasePositions[k] == t) {
         withPunctuation += plainMsg[i];
         k++;
       } else

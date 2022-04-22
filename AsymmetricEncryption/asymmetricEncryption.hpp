@@ -1,7 +1,5 @@
-#include "./../Encryption/encryption.hpp"
+#include "./../Parameters/parameters.hpp"
 
-// Необходимая длина простого числа
-#define PRIME_LENGTH 64
 // Число итераций в тесте Миллера-Рабина
 #define MILLER_RABIN_TEST_ITERATIONS 8
 // Стандартные значения открытой экспоненты (простые из чисел Ферма)
@@ -94,7 +92,7 @@ class KeysGenerator {
     KeyPair keys;
   public:
     // Конструктор по умолчанию
-    KeysGenerator();
+    KeysGenerator(int primeLength);
 
     // Получить ключи
     KeyPair getKeys();
@@ -105,7 +103,7 @@ class AsymmetricEncryption: public Encryption {
     KeyPair keys;
   public:
     // Конструктор по умолчанию
-    AsymmetricEncryption();
+    AsymmetricEncryption(Parameters params = Parameters());
 
     Message encode(Message m);
 

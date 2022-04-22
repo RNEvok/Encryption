@@ -3,11 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "c": "g++ main.cpp AsymmetricEncryption/asymmetricEncryption.cpp Caesar/caesar.cpp ShannonFano/shannonFano.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out",
+    "c": "g++ main.cpp Encryptor/encryptor.cpp Parameters/parameters.cpp AsymmetricEncryption/asymmetricEncryption.cpp Caesar/caesar.cpp ShannonFano/shannonFano.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out",
     "test": "g++ tests.cpp AsymmetricEncryption/asymmetricEncryption.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out",
     "testOmp": "g++ tests.cpp AsymmetricEncryption/asymmetricEncryption.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out",
     "unitBigInt": "g++ BigInt/tests.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out",
-    "testCaesar": "g++ Caesar/tests.cpp Caesar/caesar.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out",
-    "testShannon": "g++ ShannonFano/tests.cpp ShannonFano/shannonFano.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out"
+    "testCaesar": "g++ Caesar/tests.cpp Encryptor/encryptor.cpp Parameters/parameters.cpp Caesar/caesar.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out",
+    "testShannon": "g++ ShannonFano/tests.cpp Encryptor/encryptor.cpp Parameters/parameters.cpp ShannonFano/shannonFano.cpp Encryption/encryption.cpp BigInt/bigInt.cpp MyMath/myMath.cpp -O3 -std=c++20 -g -o a.out && ./a.out"
   }
 }
