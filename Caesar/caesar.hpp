@@ -14,7 +14,7 @@ class CaesarEncryption: public Encryption {
     int n;
   public:
     // Конструктор по умолчанию
-    CaesarEncryption(int shift = 0, CharVector alphabet = ENGLISH);
+    CaesarEncryption(int shift = 3, CharVector alphabet = ENGLISH);
 
     Message encode(Message m);
 

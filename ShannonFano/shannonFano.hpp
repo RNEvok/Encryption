@@ -43,7 +43,7 @@ class ShannonFanoEncryption: public Encryption {
     // Конструктор по умолчанию
     // a - набор символов; p - вероятности их появления
     // blockSize - размер блока
-    ShannonFanoEncryption(CharVector a = ENGLISH, DoubleVector p = ENGLISH_PROBABILITIES, int blockSize = 1);
+    ShannonFanoEncryption(CharVector a = ENGLISH, DoubleVector p = ENGLISH_PROBABILITIES, int blockSize = 2);
 
     // Возвращает строку без пунктуации
     string savePunctuation(string plainMsg);

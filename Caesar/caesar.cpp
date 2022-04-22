@@ -22,6 +22,7 @@ Message CaesarEncryption::encode(Message m, int shift) {
   string cipherMsg = "";
 
   for (auto sym : plainMsgChars) {
+    cout << "HERE3" << sym << endl;
     char symUpper = toupper(sym);
     bool isUpper = sym == symUpper;
     auto el = this->alphabetTable.find(symUpper);

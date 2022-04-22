@@ -16,3 +16,21 @@ ByteVector Message::convertToBytes() {
 BigInt Message::convertToBigInt() {
   return byteVectorToBigInt(this->convertToBytes());
 };
+
+Encryptor::Encryptor() {};
+
+Encryptor::Encryptor(Encryption* encryption) {
+  this->encryption = encryption;
+};
+
+Encryptor::~Encryptor() {
+  delete encryption;
+};
+
+Message Encryptor::encode(Message m) {
+  return encryption->encode(m);
+};
+
+Message Encryptor::decode(Message m) {
+  return encryption->decode(m);
+};

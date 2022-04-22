@@ -1,66 +1,91 @@
-#include <map>
-#include "./../BigInt/bigInt.hpp"
+#ifndef Encryption_H
+  #define Encryption_H
 
-// Первые простые числа
-const IntVector firstPrimes {
-  2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
-  31, 37, 41, 43, 47, 53, 59, 61, 67,
-  71, 73, 79, 83, 89, 97, 101, 103,
-  107, 109, 113, 127, 131, 137, 139,
-  149, 151, 157, 163, 167, 173, 179,
-  181, 191, 193, 197, 199, 211, 223,
-  227, 229, 233, 239, 241, 251, 257,
-  263, 269, 271, 277, 281, 283, 293, 
-  307, 311, 313, 317, 331, 337, 347, 
-  349, 353, 359, 367, 373, 379, 383,
-  389, 397, 401, 409, 419, 421, 431,
-  433, 439, 443, 449, 457, 461, 463, 
-  467, 479, 487, 491, 499, 503, 509,
-  521, 523, 541, 547, 557, 563, 569, 
-  571, 577, 587, 593, 599, 601, 607, 
-  613, 617, 619, 631, 641, 643, 647,
-  653, 659, 661, 673, 677, 683, 691,
-  701, 709, 719, 727, 733, 739, 743, 
-  751, 757, 761, 769, 773, 787, 797,
-  809, 811, 821, 823, 827, 829, 839, 
-  853, 857, 859, 863, 877, 881, 883, 
-  887, 907, 911, 919, 929, 937, 941,
-  947, 953, 967, 971, 977, 983, 991,
-  997
-};
+  #include <map>
+  #include "./../BigInt/bigInt.hpp"
 
-const CharVector ENGLISH {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+  // Первые простые числа
+  const IntVector firstPrimes {
+    2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
+    31, 37, 41, 43, 47, 53, 59, 61, 67,
+    71, 73, 79, 83, 89, 97, 101, 103,
+    107, 109, 113, 127, 131, 137, 139,
+    149, 151, 157, 163, 167, 173, 179,
+    181, 191, 193, 197, 199, 211, 223,
+    227, 229, 233, 239, 241, 251, 257,
+    263, 269, 271, 277, 281, 283, 293, 
+    307, 311, 313, 317, 331, 337, 347, 
+    349, 353, 359, 367, 373, 379, 383,
+    389, 397, 401, 409, 419, 421, 431,
+    433, 439, 443, 449, 457, 461, 463, 
+    467, 479, 487, 491, 499, 503, 509,
+    521, 523, 541, 547, 557, 563, 569, 
+    571, 577, 587, 593, 599, 601, 607, 
+    613, 617, 619, 631, 641, 643, 647,
+    653, 659, 661, 673, 677, 683, 691,
+    701, 709, 719, 727, 733, 739, 743, 
+    751, 757, 761, 769, 773, 787, 797,
+    809, 811, 821, 823, 827, 829, 839, 
+    853, 857, 859, 863, 877, 881, 883, 
+    887, 907, 911, 919, 929, 937, 941,
+    947, 953, 967, 971, 977, 983, 991,
+    997
+  };
 
-const BigIntVector firstPrimesBigInt = intVectorToBigIntVector(firstPrimes);
+  const CharVector ENGLISH {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
-class Message {
-  public:
-    string text;
-    bool isSecure;
+  const BigIntVector firstPrimesBigInt = intVectorToBigIntVector(firstPrimes);
 
-    // Конструктор по умолчанию
-    Message(string text, bool isSecure = false);
+  class Message {
+    public:
+      string text;
+      bool isSecure;
 
-    // Вывод сообщения в консоль
-    void logMessage();
+      // Конструктор по умолчанию
+      Message(string text, bool isSecure = false);
 
-    // Преобразование text в ByteVector
-    ByteVector convertToBytes();
+      // Вывод сообщения в консоль
+      void logMessage();
 
-    // Преобразование text в BigInt
-    BigInt convertToBigInt();
-};
+      // Преобразование text в ByteVector
+      ByteVector convertToBytes();
 
-class Encoder {
-  protected:
-    // Шифрование
-    virtual Message encode(Message m) = 0;
-};
+      // Преобразование text в BigInt
+      BigInt convertToBigInt();
+  };
 
-class Decoder {
-  protected:
-    // Дешифрование
-    virtual Message decode(Message m) = 0;
-};
+  class Encoder {
+    public:
+      // Шифрование
+      virtual Message encode(Message m) = 0;
+  };
 
-class Encryption: public Encoder, public Decoder {};
+  class Decoder {
+    public:
+      // Дешифрование
+      virtual Message decode(Message m) = 0;
+  };
+
+  class Encryption: public Encoder, public Decoder {
+    public:
+      // Деструктор
+      virtual ~Encryption() {};
+  };
+
+  class Encryptor {
+    private:
+      Encryption* encryption;
+    public:
+      // Конструктор по умолчанию
+      Encryptor();
+      // Конструктор
+      Encryptor(Encryption* encryption);
+      // Деструктор
+      ~Encryptor();
+      
+      Message encode(Message m);
+
+      Message decode(Message m);
+  };
+
+#endif

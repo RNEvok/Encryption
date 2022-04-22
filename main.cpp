@@ -1,45 +1,47 @@
 #include "AsymmetricEncryption/asymmetricEncryption.hpp"
+#include "Caesar/caesar.hpp"
+#include "ShannonFano/shannonFano.hpp"
 
 int main() {
 	try {
 		srand((unsigned)time(NULL));
 
-		AsymmetricEncryption RSA;
+		cout << "\nВыберите метод шифрования:\n0-RSA (асимметричное шифрование)\n1-Шифр Цезаря (шифрование со сдвигом)\n2-Код Шеннона-Фано (префиксное кодирование)" << endl;
+		int type;
+		cin >> type;
 
-		//Message msg("Hello, world!");
-		Message msg("Hello, world! Today is 17th april of 2022.");
+		Encryptor encryptor;
+
+		switch (type) {
+			case 0:
+				encryptor = Encryptor(new AsymmetricEncryption());
+				break;
+			case 1:
+				encryptor = Encryptor(new CaesarEncryption());
+				break;
+			case 2:
+				encryptor = Encryptor(new ShannonFanoEncryption());
+				break;
+			default:
+				cout << "\n Необходимо выбрать один из предложенных методов." << endl;
+				break;
+		}
+
+		Message msg("Hello, world!");
+		// Message msg("Hello, world! Today is 17th april of 2022.");
 		// cout << "Message: " << endl;
 		cout << msg.text << endl;
 
-		Message secureMessage = RSA.encode(msg);
+		Message secureMessage = encryptor.encode(msg);
 
 		cout << "secureMessage is secure: " << secureMessage.isSecure << endl;
 		secureMessage.logMessage();
 
-		Message decodedMessage = RSA.decode(secureMessage);
+		Message decodedMessage = encryptor.decode(secureMessage);
 
 		cout << "decodedMessage is secure: " << decodedMessage.isSecure << endl;
 		decodedMessage.logMessage();
 		
-		// Message msg("Hello, world! Today is 16th april of 2022.");
-		// // Message msg("C++");
-		// msg.logMessage();
-		// ByteVector b = msg.convertToBytes();
-
-		// for (auto &byte : b)
-		// 	cout << to_integer<int>(byte) << " ";
-
-		// cout << "\nЧисловое представление: " << endl;
-		// BigInt nMsg = msg.convertToBigInt();
-		// nMsg.logNumber();
-
-		// ByteVector c = bigIntToByteVector(nMsg);
-		// for (auto &byte : c)
-		// 	cout << to_integer<int>(byte) << " ";
-
-		// cout << "\nСнова строка: " << endl;
-		// string msg2 = byteVectorToString(c);
-		// cout << msg2 << endl;
 
 	} catch (std::invalid_argument e) {
 		cout << "Ошибка! " << e.what() << endl;
