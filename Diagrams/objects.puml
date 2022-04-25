@@ -1,6 +1,6 @@
 @startuml Объектная модель
   !theme plain
-  skinparam BackgroundColor #d2e3fc
+  skinparam BackgroundColor #fff
   skinparam ObjectBorderColor #4940ad
   skinparam ObjectBackgroundColor #efedff
   skinparam Handwritten false

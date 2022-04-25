@@ -38,9 +38,6 @@ class ShannonFanoEncryption: public Encryption {
     // Отсортировать таблицу вероятностей
     void sortByProbability(ProbabilitiesTable* t);
   public:
-    // Конструктор по умолчанию
-    // a - набор символов; p - вероятности их появления
-    // blockSize - размер блока
     ShannonFanoEncryption(Parameters params = Parameters());
 
     // Возвращает строку без пунктуации

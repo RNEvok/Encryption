@@ -15,6 +15,7 @@ using namespace std;
 #define NOTATION 10
 #define ZERO "0"
 #define ONE "1"
+#define BITS_IN_BYTE 8
 
 // Приведение вектора символов к строке
 string charVectorToString(CharVector* a);
@@ -79,10 +80,8 @@ class BigInt {
     CharVector accumulator;
     bool isNegative;
   public:
-    // Конструктор по умолчанию
     BigInt(string numberStr = ZERO, bool isNegative = false);
 
-    // Конструктор из int
     BigInt(long long number, bool isNegative = false);
 
     // Вывод числа в консоль

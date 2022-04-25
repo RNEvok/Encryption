@@ -42,7 +42,6 @@
       string text;
       bool isSecure;
 
-      // Конструктор по умолчанию
       Message(string text, bool isSecure = false);
 
       // Вывод сообщения в консоль
@@ -69,7 +68,6 @@
 
   class Encryption: public Encoder, public Decoder {
     public:
-      // Деструктор
       virtual ~Encryption() {};
   };
 

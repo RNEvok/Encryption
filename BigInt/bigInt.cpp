@@ -43,9 +43,9 @@ void deleteZerosAtEnd(CharVector* a) {
 };
 
 void deleteLeadingZeros(CharVector* a) {
-  reverse(a->begin(), a->end());
+  reverse(all(*a));
   deleteZerosAtEnd(a);
-  reverse(a->begin(), a->end());
+  reverse(all(*a));
 };
 
 int charToInt(char c) {
@@ -309,7 +309,7 @@ string subtraction(CharVector a, CharVector b) {
   }
 
   deleteZerosAtEnd(&c);
-  reverse(c.begin(), c.end());
+  reverse(all(c));
 
   return charVectorToString(&c);
 };
@@ -322,8 +322,8 @@ string additionInner(CharVector a, CharVector b, string result, int carry, bool 
 };
 
 string multiplicationInner(CharVector a, CharVector b) {
-  reverse(a.begin(), a.end());
-  reverse(b.begin(), b.end());
+  reverse(all(a));
+  reverse(all(b));
 
   IntVector stack(a.size() + b.size());
 
@@ -353,7 +353,7 @@ string multiplicationInner(CharVector a, CharVector b) {
 
   CharVector stackChar = intVectorToCharVector(&stack);
   deleteZerosAtEnd(&stackChar);
-  reverse(stackChar.begin(), stackChar.end());
+  reverse(all(stackChar));
 
   return charVectorToString(&stackChar);
 };
@@ -523,7 +523,7 @@ BigInt byteVectorToBigInt(ByteVector bytes) {
   BigInt result(0);
 
   for (auto byte : bytes) {
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < BITS_IN_BYTE; i++) {
       BigInt p((byteToInt(byte) >> i) & 1);
 
       result += p * q;

@@ -55,12 +55,12 @@ bool isMillerRabinTestOk(BigInt candidate) {
     }
 
     if (mod != canditateMinusOne && isEven(temp)) {
-      cout << "Prime: \033[1;31m false \033[0m\n" << endl;
+      cout << "Prime: " << logRed("false") << "\n" << endl;
       return false;
     }
   }
 
-  cout << "Prime: \033[1;32m true \033[0m\n" << endl;
+  cout << "Prime: " << logGreen("true") << "\n" << endl;
   return true;
 };
 

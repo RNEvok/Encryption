@@ -83,7 +83,7 @@ ShannonFanoEncryption::ShannonFanoEncryption(Parameters params) {
 };
 
 void ShannonFanoEncryption::sortByProbability(ProbabilitiesTable* t) {
-  sort(t->begin(), t->end(), [](Symbol& a, Symbol& b) {return a.probability < b.probability;});
+  sort(all(*t), [](Symbol& a, Symbol& b) {return a.probability < b.probability;});
 };
 
 void ShannonFanoEncryption::createCodes(int start, int end) {
@@ -170,7 +170,7 @@ string ShannonFanoEncryption::withPunctuation(string plainMsg) {
   int k = 0;
 
   for (int t = 0; t < plainMsg.length() + this->punctuationPositions.size(); t++) {
-    if (find(this->punctuationPositions.begin(), this->punctuationPositions.end(), t) != this->punctuationPositions.end())
+    if (find(all(this->punctuationPositions), t) != this->punctuationPositions.end())
       withPunctuation += this->punctuation[j++];
     else {
       if (this->uppercasePositions[k] == t) {

@@ -9,11 +9,11 @@
     private:
       Encryption* encryption;
     public:
-      // Конструктор по умолчанию
+
       Encryptor();
-      // Конструктор
+
       Encryptor(Encryption* encryption);
-      // Деструктор
+
       ~Encryptor();
 
       void setStrategy(Encryption* encryption);

@@ -13,7 +13,6 @@ class CaesarEncryption: public Encryption {
     // Мощность алфавита
     int n;
   public:
-    // Конструктор по умолчанию
     CaesarEncryption(Parameters params = Parameters());
 
     Message encode(Message m);

@@ -5,6 +5,10 @@
 
 using namespace std;
 
+#define all(x) begin(x), end(x)
+#define logRed(s) "\033[1;31m" << s << "\033[0m"
+#define logGreen(s) "\033[1;32m" << s << "\033[0m"
+
 // Вектор символов
 typedef vector<char> CharVector;
 // Вектор строк

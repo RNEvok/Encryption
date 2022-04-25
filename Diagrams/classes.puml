@@ -1,6 +1,6 @@
 @startuml Диаграмма классов
   !theme plain
-  skinparam BackgroundColor #d2e3fc
+  skinparam BackgroundColor #fff
   skinparam ClassBorderColor #4940ad
   skinparam ClassBackgroundColor #efedff
   skinparam Handwritten false

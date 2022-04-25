@@ -5,7 +5,10 @@ int main() {
 	try {
 		srand((unsigned)time(NULL));
 
-		cout << "\nВыберите метод шифрования:\n0-RSA (асимметричное шифрование)\n1-Шифр Цезаря (шифрование со сдвигом)\n2-Код Шеннона-Фано (префиксное кодирование)" << endl;
+		cout << "\nВыберите метод шифрования:" << endl;
+		cout << "0-RSA (асимметричное шифрование)" << endl;
+		cout << "1-Шифр Цезаря (шифрование со сдвигом)" << endl;
+		cout << "2-Код Шеннона-Фано (префиксное кодирование)" << endl;
 		int type;
 		cin >> type;
 
@@ -41,6 +44,8 @@ int main() {
 
 		Message msg("Hello, world! Today is 22th april of 2022.");
 		// Message msg("Hello, world! Today is 17th april of 2022.");
+
+		cout << "\nОткрытое сообщение: " << endl;
 		cout << msg.text << endl;
 
 		Message secureMessage = encryptor.encode(msg);

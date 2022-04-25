@@ -44,10 +44,8 @@ class PublicKey {
     BigInt e;
     BigInt n;
 
-    // Конструктор по умолчанию
     PublicKey();
 
-    // Конструктор для установки ключа
     PublicKey(BigInt e, BigInt n);
 };
 
@@ -56,10 +54,8 @@ class PrivateKey {
     BigInt d;
     BigInt n;
 
-    // Конструктор по умолчанию
     PrivateKey();
 
-    // Конструктор для установки ключа
     PrivateKey(BigInt d, BigInt n);
 };
 
@@ -68,10 +64,8 @@ class KeyPair {
     PublicKey publicKey;
     PrivateKey privateKey;
   public:
-    // Конструктор по умолчанию
     KeyPair();
 
-    // Конструктор для установки ключей
     KeyPair(PublicKey publicKey, PrivateKey privateKey);
 
     // Получить открытый ключ
@@ -91,7 +85,6 @@ class KeysGenerator {
   protected:
     KeyPair keys;
   public:
-    // Конструктор по умолчанию
     KeysGenerator(int primeLength);
 
     // Получить ключи
@@ -102,7 +95,6 @@ class AsymmetricEncryption: public Encryption {
   private:
     KeyPair keys;
   public:
-    // Конструктор по умолчанию
     AsymmetricEncryption(Parameters params = Parameters());
 
     Message encode(Message m);
