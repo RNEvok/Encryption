@@ -144,22 +144,27 @@
   KeyPair o-- PrivateKey
   KeyPair o-- PublicKey
 
+  Message <.. Encryption
   Encoder <|-- Encryption
   Decoder <|-- Encryption
+  Encryptor o-- Encryption
 
   Encryption <|.. AsymmetricEncryption
   Encryption <|.. CaesarEncryption
   Encryption <|.. ShannonFanoEncryption
-  Encryption o-- Encryptor
-  Encryption <-- Message
 
   AsymmetricEncryption *-- KeysGenerator
-  AsymmetricEncryption <.. BigInt
-  AsymmetricEncryption o-- Parameters
-  CaesarEncryption o-- Parameters
-  ShannonFanoEncryption o-- Parameters
+  AsymmetricEncryption ..> BigInt
+  ' BigInt <.. AsymmetricEncryption
+  AsymmetricEncryption ..> Parameters
+  CaesarEncryption ..> Parameters
+  ShannonFanoEncryption ..> Parameters
+  ' Parameters <.. AsymmetricEncryption
+  ' Parameters <.. CaesarEncryption
+  ' Parameters <.. ShannonFanoEncryption
 
   KeysGenerator *-- KeyPair
-  KeysGenerator <.. BigInt
+  KeysGenerator ..> BigInt
+  ' BigInt <.. KeysGenerator
   
 @enduml
