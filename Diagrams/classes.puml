@@ -154,12 +154,12 @@
   Encryption <-- Message
 
   AsymmetricEncryption *-- KeysGenerator
-  AsymmetricEncryption <-- BigInt
+  AsymmetricEncryption <.. BigInt
   AsymmetricEncryption o-- Parameters
   CaesarEncryption o-- Parameters
   ShannonFanoEncryption o-- Parameters
 
   KeysGenerator *-- KeyPair
-  KeysGenerator <-- BigInt
+  KeysGenerator <.. BigInt
   
 @enduml
